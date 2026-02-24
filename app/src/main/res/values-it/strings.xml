@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">La Mia Applicazione</string>
+    <string name="welcome_msg">Buongiorno!</string>
+    <string name="btn_label">Clicca Qui</string>
+    <string name="hint_nume">Inserisci il tuo nome...</string>
+    <string name="text_modificat">Il testo è stato modificato!</string>
+</resources>

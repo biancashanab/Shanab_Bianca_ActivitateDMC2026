@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Aplicatia Mea</string>
+    <string name="welcome_msg">Hei Lume!</string>
+    <string name="btn_label">Apasa Aici</string>
+    <string name="hint_nume">Pune Numele aici</string>
+    <string name="text_modificat">Textul s-a schimbat!</string>
+</resources>
+
