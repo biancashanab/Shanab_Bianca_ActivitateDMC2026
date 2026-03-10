@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">lab4</string>
+    <string name="add_bookstore">Add in BookStore</string>
+    <string name="bookstore_name">Bookstore name</string>
+    <string name="number_of_books">Number of books</string>
+    <string name="save">Save</string>
+    <string name="open_24h">Open 24h</string>
+    <string name="physical">Physical</string>
+    <string name="online">Online</string>
+    <string name="add_bookstore_btn">Add BookStore</string>
+    <string name="no_bookstore_added_yet">No bookstore added yet</string>
+    <string name="save_btn">Save</string>
+    <string name="average_price">Average price</string>
+</resources>
