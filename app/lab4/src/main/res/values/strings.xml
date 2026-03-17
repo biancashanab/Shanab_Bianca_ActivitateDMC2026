@@ -11,4 +11,5 @@
     <string name="no_bookstore_added_yet">No bookstore added yet</string>
     <string name="save_btn">Save</string>
     <string name="average_price">Average price</string>
+    <string name="opening_date">Select the opening date</string>
 </resources>

@@ -2,18 +2,22 @@ package com.example.lab4;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
-
-    Button btnAdd;
-    TextView tvResult;
-
     static final int REQUEST_CODE_ADD = 1;
+    Button btnAdd;
+    ListView listViewBookStores;
+    ArrayList<BookStore> bookStoreList;
+    ArrayAdapter<BookStore> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,28 +26,42 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnAdd = findViewById(R.id.btnAdd);
-        tvResult = findViewById(R.id.tvResult);
+        listViewBookStores = findViewById(R.id.listViewBookStores);
+
+        bookStoreList = new ArrayList<>();
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, bookStoreList);
+        listViewBookStores.setAdapter(adapter);
 
         btnAdd.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, activity_add_bookstore.class);
             startActivityForResult(intent, REQUEST_CODE_ADD);
         });
+
+        listViewBookStores.setOnItemClickListener((parent, view, position, id) -> {
+            BookStore store = bookStoreList.get(position);
+            Toast.makeText(MainActivity.this, store.toString(), Toast.LENGTH_SHORT).show();
+        });
+
+        listViewBookStores.setOnItemLongClickListener((parent, view, position, id) -> {
+            bookStoreList.remove(position);
+            adapter.notifyDataSetChanged();
+            Toast.makeText(MainActivity.this, "BookStore șters!", Toast.LENGTH_SHORT).show();
+            return true;
+        });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_CODE_ADD && resultCode == RESULT_OK)
-        {
-            String name = data.getStringExtra("name");
-            int books = data.getIntExtra("books",0);
-            boolean open = data.getBooleanExtra("open",false);
-            double price = data.getDoubleExtra("price",0);
-            String type = data.getStringExtra("type");
-
-            String result = "Name: " + name + "\nBooks: " + books + "\nOpen 24h: " + open + "\nAverage price: " + price + "\nType: " + type;
-            tvResult.setText(result);
+        if (requestCode == REQUEST_CODE_ADD && resultCode == RESULT_OK && data != null) {
+            BookStore store = (BookStore) data.getSerializableExtra("bookstore");
+            if (store != null) {
+                bookStoreList.add(store);
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 }
