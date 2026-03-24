@@ -12,4 +12,6 @@
     <string name="save_btn">Save</string>
     <string name="average_price">Average price</string>
     <string name="opening_date">Select the opening date</string>
+    <string name="type">"Type "</string>
+    <string name="type_hybrid">Type: HYBRID</string>
 </resources>

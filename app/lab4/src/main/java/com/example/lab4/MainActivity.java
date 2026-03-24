@@ -2,7 +2,6 @@ package com.example.lab4;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -13,11 +12,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
     static final int REQUEST_CODE_ADD = 1;
+    static final int REQUEST_CODE_EDIT = 2;
+
     Button btnAdd;
     ListView listViewBookStores;
     ArrayList<BookStore> bookStoreList;
-    ArrayAdapter<BookStore> adapter;
+    BookStoreAdapter adapter;
+
+    int selectedPosition = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         bookStoreList = new ArrayList<>();
 
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, bookStoreList);
+        adapter = new BookStoreAdapter(this, bookStoreList);
         listViewBookStores.setAdapter(adapter);
 
         btnAdd.setOnClickListener(v -> {
@@ -39,8 +43,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         listViewBookStores.setOnItemClickListener((parent, view, position, id) -> {
-            BookStore store = bookStoreList.get(position);
-            Toast.makeText(MainActivity.this, store.toString(), Toast.LENGTH_SHORT).show();
+            selectedPosition = position;
+            BookStore selectedStore = bookStoreList.get(position);
+
+            Intent intent = new Intent(MainActivity.this, activity_add_bookstore.class);
+            intent.putExtra("bookstore", selectedStore);
+            intent.putExtra("isEdit", true);
+            startActivityForResult(intent, REQUEST_CODE_EDIT);
         });
 
         listViewBookStores.setOnItemLongClickListener((parent, view, position, id) -> {
@@ -52,15 +61,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE_ADD && resultCode == RESULT_OK && data != null) {
-            BookStore store = (BookStore) data.getSerializableExtra("bookstore");
-            if (store != null) {
+        if (resultCode == RESULT_OK && data != null) {
+            BookStore store = data.getParcelableExtra("bookstore");
+
+            if (store == null) return;
+
+            if (requestCode == REQUEST_CODE_ADD) {
                 bookStoreList.add(store);
                 adapter.notifyDataSetChanged();
+            } else if (requestCode == REQUEST_CODE_EDIT) {
+                if (selectedPosition >= 0 && selectedPosition < bookStoreList.size()) {
+                    bookStoreList.set(selectedPosition, store);
+                    adapter.notifyDataSetChanged();
+                }
             }
         }
     }
