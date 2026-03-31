@@ -2,6 +2,7 @@ package com.example.lab4;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -16,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_CODE_ADD = 1;
     static final int REQUEST_CODE_EDIT = 2;
 
-    Button btnAdd;
+    Button btnAdd, btnSettings;
     ListView listViewBookStores;
     ArrayList<BookStore> bookStoreList;
     BookStoreAdapter adapter;
@@ -30,9 +31,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnAdd = findViewById(R.id.btnAdd);
+        btnSettings = findViewById(R.id.btnSettings);
         listViewBookStores = findViewById(R.id.listViewBookStores);
 
-        bookStoreList = new ArrayList<>();
+        bookStoreList = FileHelper.readBookStoresFromFile(this, FileHelper.ALL_BOOKSTORES_FILE);
 
         adapter = new BookStoreAdapter(this, bookStoreList);
         listViewBookStores.setAdapter(adapter);
@@ -42,20 +44,27 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, REQUEST_CODE_ADD);
         });
 
+        // SETTINGS
+        btnSettings.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        });
+
         listViewBookStores.setOnItemClickListener((parent, view, position, id) -> {
             selectedPosition = position;
             BookStore selectedStore = bookStoreList.get(position);
 
             Intent intent = new Intent(MainActivity.this, activity_add_bookstore.class);
-            intent.putExtra("bookstore", selectedStore);
+            intent.putExtra("bookstore", (Parcelable) selectedStore);
             intent.putExtra("isEdit", true);
             startActivityForResult(intent, REQUEST_CODE_EDIT);
         });
 
+        // FAVORITE
         listViewBookStores.setOnItemLongClickListener((parent, view, position, id) -> {
-            bookStoreList.remove(position);
-            adapter.notifyDataSetChanged();
-            Toast.makeText(MainActivity.this, "BookStore șters!", Toast.LENGTH_SHORT).show();
+            BookStore favoriteStore = bookStoreList.get(position);
+            FileHelper.appendBookStoreToFile(this, FileHelper.FAVORITES_FILE, favoriteStore);
+            Toast.makeText(MainActivity.this, "BookStore added to favorites!", Toast.LENGTH_SHORT).show();
             return true;
         });
     }
@@ -74,7 +83,16 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             } else if (requestCode == REQUEST_CODE_EDIT) {
                 if (selectedPosition >= 0 && selectedPosition < bookStoreList.size()) {
-                    bookStoreList.set(selectedPosition, store);
+                    BookStore existingStore = bookStoreList.get(selectedPosition);
+
+                    existingStore.setName(store.getName());
+                    existingStore.setNumberOfBooks(store.getNumberOfBooks());
+                    existingStore.setOpen24h(store.isOpen24h());
+                    existingStore.setAveragePrice(store.getAveragePrice());
+                    existingStore.setStoreType(store.getStoreType());
+                    existingStore.setOpeningDate(store.getOpeningDate());
+
+                    FileHelper.writeBookStoresToFile(this, FileHelper.ALL_BOOKSTORES_FILE, bookStoreList);
                     adapter.notifyDataSetChanged();
                 }
             }

@@ -3,11 +3,12 @@ package com.example.lab4;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class BookStore implements Parcelable {
+public class BookStore implements Parcelable, Serializable {
 
     public enum StoreType {
         ONLINE,
@@ -37,10 +38,8 @@ public class BookStore implements Parcelable {
         numberOfBooks = in.readInt();
         open24h = in.readByte() != 0;
         averagePrice = in.readDouble();
-        String typeName = in.readString();
-        storeType = StoreType.valueOf(typeName);
-        long time = in.readLong();
-        openingDate = new Date(time);
+        storeType = StoreType.valueOf(in.readString());
+        openingDate = new Date(in.readLong());
     }
 
     public static final Creator<BookStore> CREATOR = new Creator<BookStore>() {
@@ -121,9 +120,9 @@ public class BookStore implements Parcelable {
     @Override
     public String toString() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        return name + " | " + numberOfBooks + " carti | "
-                + (open24h ? "Open 24h" : "Program normal") + " | "
-                + storeType + " | " + averagePrice + " lei | "
-                + sdf.format(openingDate);
+        return name + " | " + numberOfBooks + " books | " +
+                (open24h ? "Open 24h" : "Normal") + " | " +
+                storeType + " | " + averagePrice + " | " +
+                sdf.format(openingDate);
     }
 }

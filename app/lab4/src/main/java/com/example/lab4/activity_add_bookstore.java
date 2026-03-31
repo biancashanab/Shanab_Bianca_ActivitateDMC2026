@@ -2,12 +2,16 @@ package com.example.lab4;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -20,6 +24,7 @@ import java.util.Locale;
 
 public class activity_add_bookstore extends AppCompatActivity {
 
+    TextView tvTitle;
     EditText etName, etBooks, etPrice;
     CheckBox cbOpen24;
     Spinner spType;
@@ -29,12 +34,12 @@ public class activity_add_bookstore extends AppCompatActivity {
     boolean isEdit = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_bookstore);
 
+        tvTitle = findViewById(R.id.tvTitle);
         etName = findViewById(R.id.etName);
         etBooks = findViewById(R.id.etBooks);
         etPrice = findViewById(R.id.etPrice);
@@ -43,6 +48,9 @@ public class activity_add_bookstore extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         btnPickDate = findViewById(R.id.btnPickDate);
         selectedCalendar = Calendar.getInstance();
+
+        // SETTINGS
+        applySettings();
 
         String[] types = {"ONLINE", "PHYSICAL", "HYBRID"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, types);
@@ -68,10 +76,10 @@ public class activity_add_bookstore extends AppCompatActivity {
                     selectedCalendar.setTime(openingDate);
 
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                    btnPickDate.setText("Data: " + sdf.format(openingDate));
+                    btnPickDate.setText("Date: " + sdf.format(openingDate));
                     dateChosen = true;
 
-                    btnSave.setText("Modifică");
+                    btnSave.setText("Modify");
                 }
             }
         }
@@ -90,7 +98,7 @@ public class activity_add_bookstore extends AppCompatActivity {
 
                         String formattedDate = String.format(
                                 Locale.getDefault(),
-                                "Data: %02d/%02d/%04d",
+                                "Date: %02d/%02d/%04d",
                                 selectedDay, selectedMonth + 1, selectedYear
                         );
 
@@ -108,7 +116,7 @@ public class activity_add_bookstore extends AppCompatActivity {
             String priceText = etPrice.getText().toString().trim();
 
             if (name.isEmpty() || booksText.isEmpty() || priceText.isEmpty() || !dateChosen) {
-                Toast.makeText(this, "Completează toate câmpurile!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Complete all fields!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -122,11 +130,45 @@ public class activity_add_bookstore extends AppCompatActivity {
 
             BookStore store = new BookStore(name, books, open, type, price, openingDate);
 
-            Intent intent = new Intent();
-            intent.putExtra("bookstore", store);
+            if (!isEdit) {
+                FileHelper.appendBookStoreToFile(this, FileHelper.ALL_BOOKSTORES_FILE, store);
+            }
 
+            Intent intent = new Intent();
+            intent.putExtra("bookstore", (Parcelable) store);
             setResult(RESULT_OK, intent);
             finish();
         });
+    }
+
+    // SETTINGS
+    private void applySettings() {
+        SharedPreferences preferences = getSharedPreferences("app_settings", MODE_PRIVATE);
+
+        float textSize = preferences.getFloat("text_size", 18f);
+        String textColorString = preferences.getString("text_color", "#FF007F");
+
+        int textColor;
+        try {
+            textColor = Color.parseColor(textColorString);
+        } catch (Exception e) {
+            textColor = Color.parseColor("#FF007F");
+        }
+
+        tvTitle.setTextSize(textSize + 4);
+        etName.setTextSize(textSize);
+        etBooks.setTextSize(textSize);
+        etPrice.setTextSize(textSize);
+        cbOpen24.setTextSize(textSize);
+
+        tvTitle.setTextColor(textColor);
+        etName.setTextColor(textColor);
+        etBooks.setTextColor(textColor);
+        etPrice.setTextColor(textColor);
+        cbOpen24.setTextColor(textColor);
+
+        etName.setHintTextColor(textColor);
+        etBooks.setHintTextColor(textColor);
+        etPrice.setHintTextColor(textColor);
     }
 }

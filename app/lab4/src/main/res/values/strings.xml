@@ -14,4 +14,7 @@
     <string name="opening_date">Select the opening date</string>
     <string name="type">"Type "</string>
     <string name="type_hybrid">Type: HYBRID</string>
+    <string name="save_settings">Save settings</string>
+    <string name="text_size">Text size</string>
+    <string name="settings">Settings</string>
 </resources>
