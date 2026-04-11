@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="etName" type="id" />
+    <item name="etType" type="id" />
+    <item name="etBooks" type="id" />
+    <item name="btnInsert" type="id" />
+</resources>

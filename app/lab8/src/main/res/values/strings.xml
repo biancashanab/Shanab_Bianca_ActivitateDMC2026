@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Laborator 8 - Room DB</string>
+    <string name="hint_name">Nume Librarie</string>
+    <string name="hint_type">Tip Librarie</string>
+    <string name="hint_books">Numar Carti</string>
+    <string name="btn_insert">Insereaza</string>
+    <string name="btn_show_all">Afiseaza Tot</string>
+    <string name="hint_search_name">Cauta dupa nume</string>
+    <string name="btn_search_name">Cauta Nume</string>
+    <string name="hint_min_books">Min Carti</string>
+    <string name="hint_max_books">Max Carti</string>
+    <string name="btn_interval">Filtreaza Interval</string>
+    <string name="hint_delete_value">Prag stergere</string>
+    <string name="btn_delete_greater">Sterge mai mare decat Prag</string>
+    <string name="btn_delete_less">Sterge mai mic decat Prag</string>
+    <string name="hint_letter">Litera inceput</string>
+    <string name="btn_increment">Incrementeaza (+1)</string>
+</resources>

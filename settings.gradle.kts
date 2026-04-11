@@ -26,3 +26,4 @@ rootProject.name = "My Application"
 include(":app")
 include(":app:lab32")
 include(":app:lab4")
+include(":app:lab8")
