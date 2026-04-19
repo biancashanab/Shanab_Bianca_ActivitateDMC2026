@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Laborator 8 - Room DB</string>
+    <string name="app_name">lab 8+9</string>
     <string name="hint_name">Nume Librarie</string>
     <string name="hint_type">Tip Librarie</string>
     <string name="hint_books">Numar Carti</string>
@@ -15,4 +15,10 @@
     <string name="btn_delete_less">Sterge mai mic decat Prag</string>
     <string name="hint_letter">Litera inceput</string>
     <string name="btn_increment">Incrementeaza (+1)</string>
+    <string name="btn_open_images">Open bookstore images</string>
+
+    <string name="header_add_library">Adăugare Librărie</string>
+    <string name="label_results">📋 Rezultate</string>
+    <string name="btn_delete_greater_short">> Prag</string>
+    <string name="btn_delete_less_short">&lt; Prag</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.lab8;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.ArrayAdapter;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText etDeleteValue, etLetter;
     private Button btnInsert, btnLoadAll, btnSearchByName, btnInterval;
     private Button btnDeleteGreater, btnDeleteLess, btnIncrement;
+    private Button btnOpenImages;
     private ListView listViewStores;
 
     private ArrayAdapter<BookStore> adapter;
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         btnDeleteGreater = findViewById(R.id.btnDeleteGreater);
         btnDeleteLess = findViewById(R.id.btnDeleteLess);
         btnIncrement = findViewById(R.id.btnIncrement);
+        btnOpenImages = findViewById(R.id.btnOpenImages);
 
         listViewStores = findViewById(R.id.listViewStores);
     }
@@ -83,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
         btnDeleteGreater.setOnClickListener(v -> deleteGreaterThan());
         btnDeleteLess.setOnClickListener(v -> deleteLessThan());
         btnIncrement.setOnClickListener(v -> incrementByLetter());
+
+        btnOpenImages.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, BookImagesActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void insertStore() {
