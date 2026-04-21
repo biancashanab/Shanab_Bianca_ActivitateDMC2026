@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="@android:drawable/dialog_holo_light_frame"
+    android:layout_marginBottom="4dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvPaperTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Paper Title"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:maxLines="2"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/tvPaperAuthors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Authors name"
+            android:textSize="13sp"
+            android:textColor="@color/textColorSecondary"
+            android:layout_marginTop="2dp"/>
+
+        <TextView
+            android:id="@+id/tvPaperSourceYear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Source | 2024"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            android:layout_marginTop="4dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginStart="8dp">
+
+        <TextView
+            android:id="@+id/tvPaperCitations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="120"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cit."
+            android:textSize="10sp"/>
+    </LinearLayout>
+
+</LinearLayout>

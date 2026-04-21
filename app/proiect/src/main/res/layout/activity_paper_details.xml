@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvDetTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title of the Academic Paper"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvDetAuthors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Authors: John Doe, Jane Smith"
+            android:textSize="16sp"
+            android:textColor="@color/textColorSecondary"
+            android:layout_marginBottom="4dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:id="@+id/tvDetYear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Year: 2024"
+                android:textStyle="italic"/>
+
+            <TextView
+                android:id="@+id/tvDetSource"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Source: OpenAlex"
+                android:layout_marginStart="16dp"
+                android:textStyle="italic"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDetCitations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Citations: 125"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Abstract"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/tvDetAbstract"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This is a placeholder for the academic paper abstract content."
+            android:layout_marginBottom="24dp"/>
+
+        <RatingBar
+            android:id="@+id/rbPaperRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1.0"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnFavorite"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Add Favorite"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btnShowOnMap"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Show on Map"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

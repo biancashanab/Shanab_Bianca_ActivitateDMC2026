@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/backgroundColor">
+
+    <TextView
+        android:id="@+id/tvThreadListTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Research Threads"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnRefreshThreads"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Refresh"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/tvThreadListTitle"
+        style="@style/Widget.AppCompat.Button.Small"/>
+
+    <ListView
+        android:id="@+id/lvThreads"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tvThreadListTitle"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp"/>
+
+    <ProgressBar
+        android:id="@+id/pbThreads"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+</RelativeLayout>
