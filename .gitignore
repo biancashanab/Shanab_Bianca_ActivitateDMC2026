@@ -13,3 +13,11 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Academic Engine Project - Exclude prompt guides and implementation details
+idee_proiect/ACADEMIC_ENGINE_MOBILE_LITE_GEMINI_PROMPTS.md
+idee_proiect/IMPLEMENTATION_DETAILS.md
+
+/app/test2025/
+/app/patial/
+/ShanabBianca/
