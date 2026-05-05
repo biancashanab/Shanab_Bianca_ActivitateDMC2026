@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Lab 10</string>
+    <string name="hint_city">Introduceti numele orasului</string>
+    <string name="result_label">Cod Oras: %1$s</string>
+    <string name="error_empty">Introduceti un oras</string>
+    <string name="afiseaz_vremea">Afiseaza vremea</string>
+    <string name="introduceti_numele_unui_oras">Introduceti numele unui oras.</string>
+</resources>

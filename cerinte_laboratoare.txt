@@ -1,0 +1,195 @@
+----------------------------------------------------------------------------------------------------------------------
+
+    -- Laborator 2 --
+
+1. Continuati lucrul in aplicatia realizata in laboratorul precedent sau creați o noua aplicație în Android Studio
+    cu o activitate Empty Views, în java, cu API 23 / API 24.
+
+2. Rulați aplicația pe emulator sau pe dispozitivul mobil.
+
+3. Identificați toate fișierele din cadrul proiectului.
+
+4. Rulați aplicația în modul debug, punând un breakpoint în metoda onCreate(). Rulați pas cu pas.
+
+5. In fișierul activity_main.xml, adăugați un buton si stabiliți constrângerile, astfel încât să fie deasupra
+    TextView-ului existent deja. Rulați iar aplicația.
+
+6. În fișierul activity_main.xml, adăugați un EditText (Plain Text) și stabiliți constrângerile, astfel încât să fie
+    poziționat sub TextView-ul existent.
+
+7. Folosiți fișierul de resurse pentru a seta textele afișate în cele trei view-uri (controale). Rulați iar aplicația.
+
+8. (Optional) Cand apasam pe buton textul din View-ul de tip textView sa se modifice cu un alt text la alegere.
+
+9. Internationalizarea aplicatiei: adaugati cel putin alte doua limbi straine pentru textele utilizate in cadrul
+    aplicatiei dezvoltate. Schimbati limba de utilizare a emulaorului, astfel incat sa prezentati trecerea de la o limba
+    la alta in cadrul aplicatiei.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+    -- Laborator 3 --
+
+1. Continuati in proiectul din laboratorul precedent sau creați unul nou în Android Studio cu API 23 sau API 24.
+    Realizati o activitate noua pe care sa o setati ca activitate implicita.
+
+2. Implementați metodele pentru prezentarea ciclului de viață al unei activități: onStart(), onResume(), onPause(), onStop().
+
+3. In cadrul fiecărei metode salvați un log de tipul error, warning, debug, info: Log.e(), Log.w(), Log.d(), Log.i(), Log.v().
+
+4. Filtrați si căutați logurile salvate în tab-ul Logat.
+
+5. Adăugați o nouă activitate în cadrul proiectului. Setați din AndroidManifest ca noua activitate să fie lansată
+    la deschiderea aplicației.
+
+6. Adăugați o a treia activitate în cadrul proiectului.
+
+7. În cea de a doua activitate adăugați un Button. La apăsarea butonului respectiv deschideți cea de a treia activitate
+    printr-un Intent.
+
+8. La deschiderea activității trimiteți un mesaj și două valori de tip întreg către activitatea deschisă printr-un Bundle.
+
+9. În activitatea nou deschisă preluați informațiile trimise din activitatea precedentă și le afișați într-un Toast.
+
+10. În activitatea nou deschisa trebuie sa aveți un buton care să trimită către activitatea precedentă un alt mesaj si
+    suma celor două valori primite.
+
+11. În activitatea inițială vor fi afișate printr-un Toast mesajul primit și valoarea calculată.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+    -- Laborator 4 --
+
+1. Continuati proiectul din laboratorul precedent sau creați unul nou în Android Studio cu API 23 sau API 24.
+    Realizati o activitate noua pe care sa o setati ca activitate implicita.
+
+2. Creați o clasă pentru un obiect din realitate care conține inițialele numelui. Exemplu Alin Zamfiroiu – clasa Magazin
+    (contine ambele initiale). Această clasă trebuie să conțină minim cinci atribute de tipuri diferite,
+    dintre care minim unul să fie string, unul de tipul boolean, unul de tip întreg și un atribut sa aiba valori
+    posibile într-o mulțime finită (enum).
+
+3. Adăugați o nouă activitate în cadrul proiectului pentru preluarea de date pentru crearea de obiecte de tipul clasei
+    create anterior. Activitatea trebuie să conțină view-uri de tipul: TextView, EditText, Button, CheckBox, RadioButton,
+    Spinner, RattingBar, Switch, ToggleButton. Această activitate de introducere date este deschisă din prima activitate
+    printr-un buton de adăugare printr-un intenet dependent.
+
+4. Datele introduse de utilizator sunt folosite pentru crearea unei instanțe a clasei. Această instanță este returnată
+    către prima activitate, din cadrul căreia a fost deschisă activitatea de introducere date. Obiectul este transmis
+    prin bundle (poate fi folosit si Parcelable sau trimiteți fiecare atribut in parte). În activitatea principală
+    este afișat obiectul prin intermediul unor view-uri de tip TextView.
+
+5. Utilizatii Inteligenta Artificiala pentru a imbunatatii modul de aranjare al view-urilur in cadrul activitatii
+    de preluare de date sau de adaugare a unui nou obiect. Puteti transmite catre AI, layoutul si sa ii solicitati
+    sa il imbunatateasca insa trebuie sa pastreze id-urile view-urilor. Astfel functionalitatea implementata de voi
+    se pastreaza si doar modul de prezentare o sa fie diferit.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+    -- Laborator 5 --
+
+1. Folositi aplicatia pe care o aveti deja sau creați o noua aplicație în Android Studio cu o activitate Empty Views,
+    în java, cu API 23/24.
+
+2. Modificati clasa pe care o aveti pentru un obiect din realitate care conține inițialele numelui vostru.
+    Aveti grija ca obiectul sa fie real. Exemplu Alin Zamfiroiu – clasa Magazin. Această clasă trebuie să conțină
+    minim cinci atribute de tipuri diferite, dintre care minim unul să fie string, unul de tipul boolean, unul de
+    tip întreg, un atribut sa aibă valori posibile într'o mulțime finită (enum). Puteți să folosiți și clasa din
+    laboratorul precedent. Mai adaugati un atribut de tip Date sau Time.
+
+3. Trebuie sa modificati si activitatea de adaugare sau creare obiect. Datele introduse de utilizator sunt folosite
+    pentru crearea unei instanțe a clasei. Această instanță este returnată către prima activitate, din cadrul căreia
+    a fost deschisă activitatea de introducere date. Trtebuie sa folosii un Intent dependent. Obiectul este transmis
+    prin bundle (poate fi folosit si Parcelable sau trimiteți fiecare atribut in parte). În activitatea principală
+    acest obiect îl adăugați într'o listă de obiecte.
+
+5. Folosiți un ListView pentru afișarea tuturor obiectelor din listă. În clasa creată implementați metoda toString,
+    iar în ListView afișați obiectele utilizând această metodă. Utilizati ArrayAdapter pentru afisare ain ListView.
+
+6. Atunci când utilizatorul selectează din ListView un obiect, acesta este afișat prin intermediul unui Toast.
+
+7. Pentru evenimentul de LongItemClick pe un obiect din lista, acesta este șters din ListView dar și din lista de obiecte.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+    -- Laborator 6 --
+
+1. Utilizați proiectul din laboratorul precedent.
+
+2. Modificați modul de afișare a obiectelor în ListView utilizând un Adapter personalizat. Modul de prezentare este
+    la alegerea voastră.
+
+3. Modificați funcționalitatea metodei abonată la evenimentul de ItemClick, astfel încât să se deschidă activitatea
+    de completare date pentru modificarea obiectului selectat. La deschiderea activității câmpurile sunt completate
+    cu informațiile primite de la obiectul selectat, iar la salvare vor fi modificate în acel obiect.
+    Mare atenție: nu adăugați un alt obiect ci îl modificați pe cel selectat.
+
+4. Pentru trimiterea obiectelor intre activitati trebuie sa folositi Parcelable.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+    -- Laborator 7 --
+
+1. Utilizați proiectul din laboratorul precedent.
+
+2. Modificați activitatea de adăugare de noi obiecte, astfel încât atunci când un nou obiect de tipul clasei voastre
+    este creat, acesta să fie salvat și într-un fișier. Salvarea noului obiect se face prin adăugarea acestuia în fișier.
+
+3. În activitatea principală modificați funcționalitatea de LongItemClick, astfel încât prin acest eveniment să fie
+    salvat obiectul selectat într-un fișier de obiecte favorite. Acest fisier este separat fata de cel initial unde
+    sunt salvate toate.
+
+4. Adăugați o nouă activitate de setări în care utilizatorul își poate seta dimensiunea și culoarea utilizată pentru
+    textele afișate. Aceste setări sunt salvate într-un fișier SharedPreferences.   Informațiile salvate în
+    SharedPreferences sunt folosite în activitatea de adăugare obiecte, astfel încât la viitoarele utilizări
+    ale aplicației, activitatea respectivă afișează textele în culoarea aleasă de utilizator și la dimensiunea
+    setată de acesta.
+
+--------------------------------------------------------------------------------------------------------------------------
+
+    -- test 2025 --
+
+2. În cadrul activității principale aveți un meniu cu opțiunile: (1p)
+    ACASĂ
+    SETARI
+
+3. Implementați clasa Calculator cel puțin 4 atribute la alegere. (1p)
+
+4. În zona ACASĂ adăugați un ListView (sau echivalent al acestuia) ce va contine instanțe ale clasei Calculator
+   și un buton ce deschide o activitate pentru adaugarea unui obiect nou. (1p) Se va utiliza adaptor personalizat. (1p)
+
+5. În activitatea de adaugare puteți utiliza același view de cel mult 2 ori de adăugare. (1p)
+
+6. Instanța obiectului creat este trimisă către activitatea principală unde este salvat în lista. Se va afișa un
+   mesaj sugestiv printr-un TOAST care indică adăugarea cu succes. (1p)
+
+7. Adaugati o activitate unde puteți edita obiectele adaugate anterior. Pentru a accesa aceasta activitate este
+    necesar apasarea scurta pe element. La finalizarea editării, obiectul este trimis către activitatea principala
+    și este actualizat în lista. Se va afisa un mesaj sugetiv printr-un TOAST care indica editarea cu succes. (1p)
+
+8. La apăsarea lungă asupra unui element, acesta este șters din lista. Se va afișa un mesaj sugestiv printr-un TOAST
+    care indica ștergerea cu succes. (1p)
+
+9. Seteaza navigatia din activitățile de adaugare si editare către zona de ACASĂ. Se va
+    folosi navigatia de tip BACK. (1p)
+
+10. În zona SETĂRI afișați o lista de culori. Culoarea este folosită ca background al butoanelor din aplicație.
+    Selecția se va salva în SharedPreferences, iar la deschiderea aplicației, textele raman setate conform alegerii
+    anterioare. Acest text este afișat în fragmentul ACASĂ deasupra butonului de adaugare obiect nou. (1p)
+
+--------------------------------------------------------------------------------------------------------------------------
+
+    -- partial --
+
+1. Creati un proiect nou in Android Studio. Adaugați o clasă Student care să conțină următoarele atribute: id, nume,
+    grupă și înca un atribut care să indice dacă studentul este militar sau civil. (2 pct)
+
+2. Creați o nouă activitate în cadrul proiectului în care să puteți adăuga obiecte de tip Student.
+    În activitatea de adăugare, trebuie să folosiți cel putin 4 view-uri, dintre care unul trebuie să fie obligatoriu
+    RadioButton. Această activitate este deschisă din prima activitate prin intermediul unui buton. (1 pct)
+
+3. Datele introduse sunt folosite pentru crearea unei instanțe a clasei Student. Aceasta instanță este returnată către
+    prima activitate. Obiectul este transmis folosind Parcelable. În activitatea principală acest obiect va fi adăugat
+    într-o listă de obiecte List<Student>. Obs. Lista trebuie să fie persistentă. (1 pct)
+
+4. Afisati obiectele transmise într-un ListView folosind un adapter personalizat.
+
+--------------------------------------------------------------------------------------------------------------------------
