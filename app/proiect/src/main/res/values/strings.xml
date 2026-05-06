@@ -1,3 +1,21 @@
 <resources>
-    <string name="app_name">proiect</string>
+    <string name="app_name">Academic Engine Lite</string>
+
+    <string-array name="modes_array">
+        <item>auto</item>
+        <item>research</item>
+        <item>discuss</item>
+    </string-array>
+
+    <string-array name="planners_array">
+        <item>auto</item>
+        <item>v1</item>
+        <item>v2</item>
+    </string-array>
+
+    <string-array name="sort_array">
+        <item>year</item>
+        <item>citations</item>
+        <item>source</item>
+    </string-array>
 </resources>

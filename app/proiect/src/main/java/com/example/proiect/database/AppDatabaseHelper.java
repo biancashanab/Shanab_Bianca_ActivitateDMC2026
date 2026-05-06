@@ -373,4 +373,17 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return data;
     }
+
+    public List<PaperItem> getTopPapersByCitations(int limit) {
+        List<PaperItem> papers = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_PAPERS, null, null, null, null, null, COL_PAPER_CITATIONS + " DESC", String.valueOf(limit));
+        if (cursor.moveToFirst()) {
+            do {
+                papers.add(extractPaper(cursor));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return papers;
+    }
 }

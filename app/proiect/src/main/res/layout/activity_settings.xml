@@ -1,69 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
     android:background="@color/backgroundColor">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Settings"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
-        android:layout_marginBottom="24dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Default Research Mode"/>
-    <Spinner
-        android:id="@+id/spDefaultMode"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"/>
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Default Planner"/>
-    <Spinner
-        android:id="@+id/spDefaultPlanner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Setări Aplicație"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginBottom="24dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Default Sort Order"/>
-    <Spinner
-        android:id="@+id/spDefaultSort"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Research Mode Implicit"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+        <Spinner
+            android:id="@+id/spDefaultMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/modes_array"
+            android:layout_marginBottom="16dp"/>
 
-    <Switch
-        android:id="@+id/swAutoSave"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Auto-save results"
-        android:layout_marginBottom="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Planner Implicit"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+        <Spinner
+            android:id="@+id/spDefaultPlanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/planners_array"
+            android:layout_marginBottom="16dp"/>
 
-    <CheckBox
-        android:id="@+id/cbRecentOnly"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Show recent papers only"
-        android:layout_marginBottom="32dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sortare Implicită"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+        <Spinner
+            android:id="@+id/spDefaultSort"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/sort_array"
+            android:layout_marginBottom="24dp"/>
 
-    <Button
-        android:id="@+id/btnSaveSettings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save Settings"
-        android:backgroundTint="@color/colorPrimary"/>
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/swAutoSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Salvare automată rezultate"
+            android:layout_marginBottom="12dp"/>
 
-</LinearLayout>
+        <CheckBox
+            android:id="@+id/cbRecentOnly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Doar articole recente"
+            android:layout_marginBottom="12dp"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/swDarkMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dark Mode"
+            android:layout_marginBottom="32dp"/>
+
+        <Button
+            android:id="@+id/btnSaveSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Salvează Setările"
+            android:backgroundTint="@color/colorPrimary"/>
+
+    </LinearLayout>
+</ScrollView>

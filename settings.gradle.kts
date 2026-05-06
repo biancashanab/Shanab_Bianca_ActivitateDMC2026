@@ -19,6 +19,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://jitpack.io") }
     }
 }
 
@@ -28,3 +29,6 @@ include(":app:lab32")
 include(":app:lab4")
 include(":app:lab8")
 include(":app:proiect")
+include(":app:test2025")
+include(":app:patial")
+include(":app:lab10")
