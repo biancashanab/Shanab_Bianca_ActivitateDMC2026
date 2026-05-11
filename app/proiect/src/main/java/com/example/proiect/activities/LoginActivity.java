@@ -44,30 +44,49 @@ public class LoginActivity extends AppCompatActivity {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+        // Validare câmpuri goale
+        if (email.isEmpty()) {
+            etEmail.setError(getString(R.string.err_empty_email));
+            return;
+        }
+        if (password.isEmpty()) {
+            etPassword.setError(getString(R.string.err_empty_password));
+            return;
+        }
+
+        // Validare format email
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.setError(getString(R.string.err_invalid_email));
+            return;
+        }
+
+        // Validare lungime minimă (opțional pentru login, dar util pentru UX)
+        if (password.length() < 8) {
+            etPassword.setError(getString(R.string.err_password_short));
             return;
         }
 
         pbLogin.setVisibility(View.VISIBLE);
         btnLogin.setEnabled(false);
+        btnGoToRegister.setEnabled(false);
 
-        // Simulam o mica intarziere pentru UX (ProgressBar)
+        // Simulăm o mică întârziere pentru UX (ProgressBar)
         new android.os.Handler().postDelayed(() -> {
             int userId = dbHelper.verifyLogin(email, password);
             pbLogin.setVisibility(View.GONE);
             btnLogin.setEnabled(true);
+            btnGoToRegister.setEnabled(true);
 
             if (userId != -1) {
                 PreferencesManager.saveLoggedUserEmail(this, email);
-                Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.msg_login_success, Toast.LENGTH_SHORT).show();
                 
                 Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                 startActivity(intent);
                 finish();
             } else {
-                Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.msg_login_failed, Toast.LENGTH_SHORT).show();
             }
-        }, 1000);
+        }, 1200);
     }
 }
