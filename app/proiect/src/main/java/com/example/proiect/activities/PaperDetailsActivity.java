@@ -2,11 +2,14 @@ package com.example.proiect.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.proiect.R;
 import com.example.proiect.database.AppDatabaseHelper;
@@ -28,6 +31,13 @@ public class PaperDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paper_details);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.label_abstract);
+        }
+
         dbHelper = new AppDatabaseHelper(this);
         String userEmail = PreferencesManager.getLoggedUserEmail(this);
         currentUserId = dbHelper.getUserIdByEmail(userEmail);
@@ -36,7 +46,7 @@ public class PaperDetailsActivity extends AppCompatActivity {
         paper = dbHelper.loadPaperById(paperId);
 
         if (paper == null) {
-            Toast.makeText(this, "Paper not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.err_paper_not_found, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -46,6 +56,15 @@ public class PaperDetailsActivity extends AppCompatActivity {
         
         // Add to history
         dbHelper.addHistory(currentUserId, paper.getId());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initViews() {
@@ -58,6 +77,8 @@ public class PaperDetailsActivity extends AppCompatActivity {
         rbRating = findViewById(R.id.rbPaperRating);
         btnFavorite = findViewById(R.id.btnFavorite);
         btnMap = findViewById(R.id.btnShowOnMap);
+        Button btnShare = findViewById(R.id.btnSharePaper);
+        Button btnOpenWeb = findViewById(R.id.btnOpenWeb);
 
         isFavorite = dbHelper.isFavorite(currentUserId, paper.getId());
         updateFavoriteButton();
@@ -70,20 +91,39 @@ public class PaperDetailsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        btnShare.setOnClickListener(v -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            String shareContent = getString(R.string.share_prefix) + paper.getTitle() + getString(R.string.share_link_label) + paper.getUrl();
+            sendIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
+            sendIntent.setType("text/plain");
+            startActivity(Intent.createChooser(sendIntent, getString(R.string.share_chooser_title)));
+        });
+
+        btnOpenWeb.setOnClickListener(v -> {
+            String url = paper.getUrl();
+            if (url != null && (url.startsWith("http://") || url.startsWith("https://"))) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url));
+                startActivity(browserIntent);
+            } else {
+                Toast.makeText(this, R.string.err_invalid_url, Toast.LENGTH_SHORT).show();
+            }
+        });
+
         rbRating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
             if (fromUser) {
                 dbHelper.saveRating(currentUserId, paper.getId(), rating);
-                Toast.makeText(this, "Rating saved!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.msg_rating_saved, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void displayData() {
         tvTitle.setText(paper.getTitle());
-        tvAuthors.setText("Authors: " + paper.getAuthors());
-        tvYear.setText("Year: " + paper.getYear());
-        tvSource.setText("Source: " + paper.getSource());
-        tvCitations.setText("Citations: " + paper.getCitationCount());
+        tvAuthors.setText(getString(R.string.label_authors) + paper.getAuthors());
+        tvYear.setText(getString(R.string.label_year) + paper.getYear());
+        tvSource.setText(getString(R.string.label_source) + paper.getSource());
+        tvCitations.setText(getString(R.string.label_citations) + paper.getCitationCount());
         tvAbstract.setText(paper.getAbstractText());
         
         float rating = dbHelper.loadRating(currentUserId, paper.getId());
@@ -94,20 +134,20 @@ public class PaperDetailsActivity extends AppCompatActivity {
         if (isFavorite) {
             dbHelper.removeFavorite(currentUserId, paper.getId());
             isFavorite = false;
-            Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.msg_fav_removed, Toast.LENGTH_SHORT).show();
         } else {
             dbHelper.addFavorite(currentUserId, paper.getId());
             isFavorite = true;
-            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.msg_fav_added, Toast.LENGTH_SHORT).show();
         }
         updateFavoriteButton();
     }
 
     private void updateFavoriteButton() {
         if (isFavorite) {
-            btnFavorite.setText("Remove Favorite");
+            btnFavorite.setText(R.string.btn_remove_favorite);
         } else {
-            btnFavorite.setText("Add Favorite");
+            btnFavorite.setText(R.string.btn_add_favorite);
         }
     }
 }

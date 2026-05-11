@@ -1,5 +1,93 @@
 <resources>
     <string name="app_name">Academic Engine Lite</string>
+    <string name="welcome_msg">Bine ai venit la Academic Engine</string>
+    <string name="login">Autentificare</string>
+    <string name="register">Înregistrare</string>
+    <string name="search_hint">Caută articole...</string>
+    <string name="no_data">Nu există date locale. Apăsați Refresh.</string>
+    <string name="error_network">Eroare de rețea. Datele demo au fost încărcate.</string>
+    <string name="success_save">Date salvate cu succes!</string>
+    <string name="empty_results">Nu am găsit rezultate pentru căutarea dvs.</string>
+    <string name="share">Distribuie</string>
+    <string name="open_web">Deschide în browser</string>
+
+    <!-- UI Labels & Hints -->
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Parolă</string>
+    <string name="hint_full_name">Nume Complet</string>
+    <string name="label_create_account">Creează Cont</string>
+    <string name="label_dashboard">Dashboard</string>
+    <string name="label_settings">Setări</string>
+    <string name="label_logout">Logout</string>
+    <string name="label_research_threads">Research Threads</string>
+    <string name="label_saved_papers">Saved Papers</string>
+    <string name="label_map">Map</string>
+    <string name="label_analytics">Analytics</string>
+    <string name="label_refresh">Refresh</string>
+    <string name="label_favorites">Favorite</string>
+    <string name="label_about">Despre</string>
+    <string name="label_date">Dată</string>
+    <string name="label_abstract">Abstract</string>
+
+    <!-- Settings Labels -->
+    <string name="title_settings">Setări Aplicație</string>
+    <string name="label_default_mode">Research Mode Implicit</string>
+    <string name="label_default_planner">Planner Implicit</string>
+    <string name="label_default_sort">Sortare Implicită</string>
+    <string name="label_auto_save">Salvare automată rezultate</string>
+    <string name="label_recent_only">Doar articole recente</string>
+    <string name="label_dark_mode">Dark Mode</string>
+    <string name="btn_save_settings">Salvează Setările</string>
+
+    <!-- Validation & Messages -->
+    <string name="err_empty_email">Introduceți email-ul</string>
+    <string name="err_empty_password">Introduceți parola</string>
+    <string name="err_invalid_email">Format email invalid</string>
+    <string name="err_password_short">Parola trebuie să aibă minim 8 caractere</string>
+    <string name="msg_login_success">Autentificare reușită!</string>
+    <string name="msg_login_failed">Email sau parolă incorectă</string>
+    <string name="err_empty_name">Introduceți numele complet</string>
+    <string name="msg_register_success">Cont creat cu succes!</string>
+    <string name="err_register_failed">Eroare: Email-ul este deja utilizat.</string>
+    <string name="msg_coming_soon">%s va fi disponibil în curând!</string>
+    <string name="err_paper_not_found">Articolul nu a fost găsit</string>
+    <string name="err_invalid_url">URL invalid sau inexistent</string>
+    <string name="msg_rating_saved">Rating salvat!</string>
+    <string name="msg_fav_added">Adăugat la favorite</string>
+    <string name="msg_fav_removed">Eliminat din favorite</string>
+    <string name="btn_add_favorite">Adaugă la Favorite</string>
+    <string name="btn_remove_favorite">Elimină din Favorite</string>
+    <string name="btn_show_on_map">Vezi pe hartă</string>
+    <string name="share_prefix">Vezi acest articol: </string>
+    <string name="share_link_label">\nLink: </string>
+    <string name="share_chooser_title">Distribuie articolul</string>
+
+    <!-- Paper Details Labels -->
+    <string name="label_authors">Autori: </string>
+    <string name="label_year">An: </string>
+    <string name="label_source">Sursă: </string>
+    <string name="label_citations">Citări: </string>
+
+    <!-- Filter Labels -->
+    <string name="filter_all_sources">Toate Sursele</string>
+    <string name="sort_year_newest">Sortare după an (Cel mai nou)</string>
+    <string name="sort_year_oldest">Sortare după an (Cel mai vechi)</string>
+    <string name="sort_citations">Sortare după citări</string>
+    <string name="title_select_year">Selectați Anul</string>
+    <string name="empty_threads_msg">Nu am găsit thread-uri de cercetare.\nApasă Refresh pentru actualizare.</string>
+    <string name="empty_results_msg">Nu am găsit niciun articol care să corespundă criteriilor.</string>
+    <string name="loading_msg">Se încarcă datele, vă rugăm așteptați...</string>
+    <string name="error_loading_msg">A apărut o eroare la descărcarea datelor.</string>
+    <string name="btn_retry">Reîncearcă</string>
+    <string name="label_mode_prefix">Mod: </string>
+    <string name="label_updated_prefix">Actualizat: </string>
+    <string name="label_papers_suffix"> articole</string>
+    <string name="err_no_locations">Nu au fost găsite articole cu locații</string>
+    <string name="label_location_prefix">Locație: </string>
+    <string name="chart_sources_title">Surse Articole</string>
+    <string name="chart_label_papers">Articole</string>
+    <string name="chart_label_sources">Surse</string>
+    <string name="chart_label_citations">Citări</string>
 
     <string-array name="modes_array">
         <item>auto</item>

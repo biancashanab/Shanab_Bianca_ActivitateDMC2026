@@ -1,9 +1,11 @@
 package com.example.proiect.activities;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.proiect.R;
 import com.example.proiect.database.AppDatabaseHelper;
@@ -17,7 +19,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private AppDatabaseHelper dbHelper;
@@ -28,6 +30,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.label_map);
+        }
+
         dbHelper = new AppDatabaseHelper(this);
         targetPaperId = getIntent().getStringExtra("PAPER_ID");
 
@@ -37,6 +46,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -60,7 +78,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         List<PaperItem> allPapers = dbHelper.loadAllPapers();
         
         if (allPapers.isEmpty()) {
-            Toast.makeText(this, "No papers with locations found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.err_no_locations, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -82,7 +100,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12));
             
             // Optionally show toast with paper info
-            Toast.makeText(this, "Location: " + paper.getInstitution(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.label_location_prefix) + paper.getInstitution(), Toast.LENGTH_SHORT).show();
         }
     }
 }
