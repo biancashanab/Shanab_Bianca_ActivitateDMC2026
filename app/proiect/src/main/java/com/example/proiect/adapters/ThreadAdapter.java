@@ -55,11 +55,11 @@ public class ThreadAdapter extends BaseAdapter {
 
         holder.tvTitle.setText(thread.getTitle());
         holder.tvQuery.setText(thread.getQuery());
-        holder.tvMode.setText("Mode: " + thread.getMode());
-        holder.tvDate.setText("Updated: " + thread.getUpdatedAt());
+        holder.tvMode.setText(context.getString(R.string.label_mode_prefix) + thread.getMode());
+        holder.tvDate.setText(context.getString(R.string.label_updated_prefix) + thread.getUpdatedAt());
         
         int count = thread.getPapers() != null ? thread.getPapers().size() : 0;
-        holder.tvCount.setText(count + " papers");
+        holder.tvCount.setText(count + context.getString(R.string.label_papers_suffix));
 
         return convertView;
     }

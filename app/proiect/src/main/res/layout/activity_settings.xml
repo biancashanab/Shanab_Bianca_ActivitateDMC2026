@@ -2,59 +2,41 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor">
+    android:fitsSystemWindows="true"
+    android:background="@drawable/app_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="@android:color/transparent">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Setări Aplicație"
+            android:text="@string/title_settings"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="24dp"/>
+            android:textColor="@color/navy_primary"
+            android:layout_marginBottom="24dp"
+            android:shadowColor="#40000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Research Mode Implicit"
+            android:text="@string/label_default_sort"
             android:textStyle="bold"
-            android:layout_marginBottom="4dp"/>
-        <Spinner
-            android:id="@+id/spDefaultMode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/modes_array"
-            android:layout_marginBottom="16dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Planner Implicit"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp"/>
-        <Spinner
-            android:id="@+id/spDefaultPlanner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/planners_array"
-            android:layout_marginBottom="16dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sortare Implicită"
-            android:textStyle="bold"
+            android:textColor="@color/text_title"
             android:layout_marginBottom="4dp"/>
         <Spinner
             android:id="@+id/spDefaultSort"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_card_academic"
             android:entries="@array/sort_array"
             android:layout_marginBottom="24dp"/>
 
@@ -62,29 +44,35 @@
             android:id="@+id/swAutoSave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Salvare automată rezultate"
+            android:text="@string/label_auto_save"
+            android:textColor="@color/text_body"
             android:layout_marginBottom="12dp"/>
 
         <CheckBox
             android:id="@+id/cbRecentOnly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Doar articole recente"
+            android:text="@string/label_recent_only"
+            android:textColor="@color/text_body"
             android:layout_marginBottom="12dp"/>
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/swDarkMode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dark Mode"
+            android:text="@string/label_dark_mode"
+            android:textColor="@color/text_body"
             android:layout_marginBottom="32dp"/>
 
         <Button
             android:id="@+id/btnSaveSettings"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Salvează Setările"
-            android:backgroundTint="@color/colorPrimary"/>
+            android:layout_height="54dp"
+            android:text="@string/btn_save_settings"
+            android:background="@drawable/btn_academic_primary"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:textStyle="bold" />
 
     </LinearLayout>
 </ScrollView>

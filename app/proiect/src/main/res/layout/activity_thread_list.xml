@@ -1,42 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@color/backgroundColor">
+    android:fitsSystemWindows="true"
+    android:background="@drawable/app_background">
 
-    <TextView
-        android:id="@+id/tvThreadListTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Research Threads"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
-        android:layout_marginBottom="16dp"/>
+    <include
+        android:id="@+id/toolbar_include"
+        layout="@layout/toolbar_main" />
 
-    <Button
-        android:id="@+id/btnRefreshThreads"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Refresh"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@id/tvThreadListTitle"
-        style="@style/Widget.AppCompat.Button.Small"/>
-
+    <!-- Success State (List) -->
     <ListView
         android:id="@+id/lvThreads"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tvThreadListTitle"
+        android:layout_below="@id/toolbar_include"
+        android:padding="12dp"
+        android:clipToPadding="false"
         android:divider="@android:color/transparent"
-        android:dividerHeight="8dp"/>
+        android:dividerHeight="4dp"/>
 
-    <ProgressBar
-        android:id="@+id/pbThreads"
+    <!-- Loading State -->
+    <LinearLayout
+        android:id="@+id/llLoadingThreads"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
         android:layout_centerInParent="true"
-        android:visibility="gone"/>
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/gold_accent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loading_msg"
+            android:textColor="@color/text_body"
+            android:layout_marginTop="12dp"/>
+    </LinearLayout>
+
+    <!-- Empty/Error State -->
+    <LinearLayout
+        android:id="@+id/llEmptyThreads"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:padding="32dp"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@android:drawable/ic_menu_info_details"
+            app:tint="@color/text_muted"
+            android:contentDescription="@string/label_about"
+            android:alpha="0.3"/>
+        <TextView
+            android:id="@+id/tvEmptyMessageThreads"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_threads_msg"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textColor="@color/text_muted"
+            android:layout_marginTop="20dp"/>
+        <Button
+            android:id="@+id/btnRetryThreads"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_retry"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/btn_academic_primary"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
 
 </RelativeLayout>

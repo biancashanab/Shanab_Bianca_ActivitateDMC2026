@@ -1,13 +1,15 @@
 package com.example.proiect.activities;
 
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.proiect.R;
@@ -15,7 +17,7 @@ import com.example.proiect.utils.PreferencesManager;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private Spinner spDefaultMode, spDefaultPlanner, spDefaultSort;
+    private Spinner spDefaultSort;
     private SwitchCompat swAutoSave, swDarkMode;
     private CheckBox cbRecentOnly;
     private Button btnSave;
@@ -25,15 +27,27 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.label_settings);
+        }
+
         initViews();
         loadSettings();
 
         btnSave.setOnClickListener(v -> saveSettings());
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initViews() {
-        spDefaultMode = findViewById(R.id.spDefaultMode);
-        spDefaultPlanner = findViewById(R.id.spDefaultPlanner);
         spDefaultSort = findViewById(R.id.spDefaultSort);
         swAutoSave = findViewById(R.id.swAutoSave);
         swDarkMode = findViewById(R.id.swDarkMode);
@@ -43,16 +57,12 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void loadSettings() {
         // Load values from PreferencesManager
-        String mode = PreferencesManager.getDefaultMode(this);
-        String planner = PreferencesManager.getDefaultPlanner(this);
         String sort = PreferencesManager.getDefaultSort(this);
         boolean autoSave = PreferencesManager.isAutoSaveResults(this);
         boolean recentOnly = PreferencesManager.isRecentPapersOnly(this);
         boolean darkMode = PreferencesManager.isDarkMode(this);
 
-        // Set Spinners
-        setSpinnerValue(spDefaultMode, mode, R.array.modes_array);
-        setSpinnerValue(spDefaultPlanner, planner, R.array.planners_array);
+        // Set Spinner
         setSpinnerValue(spDefaultSort, sort, R.array.sort_array);
 
         // Set Switches/CheckBox
@@ -62,6 +72,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setSpinnerValue(Spinner spinner, String value, int arrayResId) {
+        if (value == null) return;
         String[] options = getResources().getStringArray(arrayResId);
         for (int i = 0; i < options.length; i++) {
             if (options[i].equalsIgnoreCase(value)) {
@@ -72,22 +83,25 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void saveSettings() {
-        String selectedMode = spDefaultMode.getSelectedItem().toString();
-        String selectedPlanner = spDefaultPlanner.getSelectedItem().toString();
         String selectedSort = spDefaultSort.getSelectedItem().toString();
         boolean autoSave = swAutoSave.isChecked();
         boolean recentOnly = cbRecentOnly.isChecked();
         boolean darkMode = swDarkMode.isChecked();
 
         // Save to PreferencesManager
-        PreferencesManager.saveDefaultMode(this, selectedMode);
-        PreferencesManager.saveDefaultPlanner(this, selectedPlanner);
         PreferencesManager.saveDefaultSort(this, selectedSort);
         PreferencesManager.saveAutoSaveResults(this, autoSave);
         PreferencesManager.saveRecentPapersOnly(this, recentOnly);
         PreferencesManager.saveDarkMode(this, darkMode);
 
-        Toast.makeText(this, "Setări salvate cu succes!", Toast.LENGTH_SHORT).show();
+        // Apply dark mode immediately
+        if (darkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+        Toast.makeText(this, R.string.success_save, Toast.LENGTH_SHORT).show();
         finish();
     }
 }

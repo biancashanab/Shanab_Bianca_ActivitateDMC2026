@@ -5,15 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.proiect.R;
 import com.example.proiect.adapters.PaperAdapter;
@@ -35,6 +39,7 @@ public class ResearchResultsActivity extends AppCompatActivity {
     private Spinner spSource, spSort;
     private CheckBox cbFavorites;
     private ListView lvPapers;
+    private LinearLayout llLoading, llEmpty;
     private AppDatabaseHelper dbHelper;
     private List<PaperItem> allPapers = new ArrayList<>();
     private List<PaperItem> filteredPapers = new ArrayList<>();
@@ -47,6 +52,13 @@ public class ResearchResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_research_results);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.label_research_threads);
+        }
 
         dbHelper = new AppDatabaseHelper(this);
         String userEmail = PreferencesManager.getLoggedUserEmail(this);
@@ -66,6 +78,8 @@ public class ResearchResultsActivity extends AppCompatActivity {
         spSort = findViewById(R.id.spSort);
         cbFavorites = findViewById(R.id.cbFavoritesOnly);
         lvPapers = findViewById(R.id.lvPapers);
+        llLoading = findViewById(R.id.llLoadingResults);
+        llEmpty = findViewById(R.id.llEmptyResults);
         Button btnDate = findViewById(R.id.btnDateFilter);
 
         adapter = new PaperAdapter(this, filteredPapers);
@@ -81,22 +95,39 @@ public class ResearchResultsActivity extends AppCompatActivity {
         btnDate.setOnClickListener(v -> showYearPicker());
     }
 
-    private void loadData(boolean showFavorites) {
-        if (showFavorites) {
-            allPapers = dbHelper.loadFavoritePapers(currentUserId);
-            cbFavorites.setChecked(true);
-        } else if (threadId != null) {
-            allPapers = dbHelper.loadPapersForThread(threadId);
-        } else {
-            allPapers = dbHelper.loadAllPapers();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
         }
-        applyFilters();
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void loadData(boolean showFavorites) {
+        llLoading.setVisibility(View.VISIBLE);
+        llEmpty.setVisibility(View.GONE);
+        lvPapers.setVisibility(View.GONE);
+
+        // Simulăm o mică întârziere pentru UX local
+        new android.os.Handler().postDelayed(() -> {
+            llLoading.setVisibility(View.GONE);
+            if (showFavorites) {
+                allPapers = dbHelper.loadFavoritePapers(currentUserId);
+                cbFavorites.setChecked(true);
+            } else if (threadId != null) {
+                allPapers = dbHelper.loadPapersForThread(threadId);
+            } else {
+                allPapers = dbHelper.loadAllPapers();
+            }
+            applyFilters();
+        }, 500);
     }
 
     private void setupFilters() {
         // Setup Source Spinner
         Set<String> sources = new HashSet<>();
-        sources.add("All Sources");
+        sources.add(getString(R.string.filter_all_sources));
         for (PaperItem p : allPapers) {
             sources.add(p.getSource());
         }
@@ -107,7 +138,11 @@ public class ResearchResultsActivity extends AppCompatActivity {
         spSource.setAdapter(sourceAdapter);
 
         // Setup Sort Spinner
-        String[] sortOptions = {"Sort by Year (Newest)", "Sort by Year (Oldest)", "Sort by Citations"};
+        String[] sortOptions = {
+                getString(R.string.sort_year_newest),
+                getString(R.string.sort_year_oldest),
+                getString(R.string.sort_citations)
+        };
         ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sortOptions);
         sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spSort.setAdapter(sortAdapter);
@@ -147,13 +182,14 @@ public class ResearchResultsActivity extends AppCompatActivity {
 
     private void applyFilters() {
         String query = etSearch.getText().toString().toLowerCase();
-        String selectedSource = spSource.getSelectedItem() != null ? spSource.getSelectedItem().toString() : "All Sources";
+        String allSourcesLabel = getString(R.string.filter_all_sources);
+        String selectedSource = spSource.getSelectedItem() != null ? spSource.getSelectedItem().toString() : allSourcesLabel;
         boolean favoritesOnly = cbFavorites.isChecked();
 
         filteredPapers.clear();
         for (PaperItem p : allPapers) {
             boolean matchesSearch = p.getTitle().toLowerCase().contains(query);
-            boolean matchesSource = selectedSource.equals("All Sources") || p.getSource().equals(selectedSource);
+            boolean matchesSource = selectedSource.equals(allSourcesLabel) || p.getSource().equals(selectedSource);
             boolean matchesFavorite = !favoritesOnly || dbHelper.isFavorite(currentUserId, p.getId());
             boolean matchesYear = filterYear == -1 || p.getYear() == filterYear;
 
@@ -164,6 +200,14 @@ public class ResearchResultsActivity extends AppCompatActivity {
 
         sortPapers();
         adapter.notifyDataSetChanged();
+
+        if (filteredPapers.isEmpty()) {
+            llEmpty.setVisibility(View.VISIBLE);
+            lvPapers.setVisibility(View.GONE);
+        } else {
+            llEmpty.setVisibility(View.GONE);
+            lvPapers.setVisibility(View.VISIBLE);
+        }
     }
 
     private void sortPapers() {
@@ -189,7 +233,7 @@ public class ResearchResultsActivity extends AppCompatActivity {
         }, year, 0, 1);
         
         // Hide day and month if possible or just use it as year picker
-        datePickerDialog.setTitle("Select Year");
+        datePickerDialog.setTitle(R.string.title_select_year);
         datePickerDialog.show();
     }
 }
