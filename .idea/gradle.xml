@@ -10,10 +10,13 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/app/lab10" />
             <option value="$PROJECT_DIR$/app/lab32" />
             <option value="$PROJECT_DIR$/app/lab4" />
             <option value="$PROJECT_DIR$/app/lab8" />
+            <option value="$PROJECT_DIR$/app/patial" />
             <option value="$PROJECT_DIR$/app/proiect" />
+            <option value="$PROJECT_DIR$/app/test2025" />
           </set>
         </option>
       </GradleProjectSettings>
