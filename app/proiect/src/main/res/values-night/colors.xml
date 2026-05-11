@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FFFFFFFF</color>
+    <color name="white">#FF000000</color>
+
+    <!-- Academic Brand Colors for Dark Mode -->
+    <color name="navy_primary">#243B53</color>
+    <color name="navy_dark">#000000</color>
+    <color name="gold_accent">#D4AF37</color>
+
+    <!-- Backgrounds for Dark Mode -->
+    <color name="bg_academic">#102A43</color>
+    <color name="card_surface">#243B53</color>
+
+    <!-- Text for Dark Mode -->
+    <color name="text_title">#F0F4F8</color>
+    <color name="text_body">#D9E2EC</color>
+    <color name="text_muted">#9FB3C8</color>
+</resources>
