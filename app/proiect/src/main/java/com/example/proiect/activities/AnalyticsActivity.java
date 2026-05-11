@@ -2,10 +2,13 @@ package com.example.proiect.activities;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 
 import com.example.proiect.R;
@@ -43,9 +46,25 @@ public class AnalyticsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analytics);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.label_analytics);
+        }
+
         dbHelper = new AppDatabaseHelper(this);
         initViews();
         loadData();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initViews() {
@@ -68,7 +87,7 @@ public class AnalyticsActivity extends AppCompatActivity {
         pieChartSource.getDescription().setEnabled(false);
         pieChartSource.setUsePercentValues(true);
         pieChartSource.setEntryLabelColor(Color.BLACK);
-        pieChartSource.setCenterText("Surse Articole");
+        pieChartSource.setCenterText(getString(R.string.chart_sources_title));
         pieChartSource.setCenterTextSize(16f);
 
         // Bar Chart Citations
@@ -103,13 +122,15 @@ public class AnalyticsActivity extends AppCompatActivity {
         Collections.sort(sortedYears);
 
         for (int i = 0; i < sortedYears.size(); i++) {
-            int year = sortedYears.get(i);
-            int count = data.get(year);
-            entries.add(new BarEntry(i, count));
-            years.add(String.valueOf(year));
+            Integer year = sortedYears.get(i);
+            Integer count = data.get(year);
+            if (year != null && count != null) {
+                entries.add(new BarEntry(i, count.floatValue()));
+                years.add(String.valueOf(year));
+            }
         }
 
-        BarDataSet dataSet = new BarDataSet(entries, "Articole");
+        BarDataSet dataSet = new BarDataSet(entries, getString(R.string.chart_label_papers));
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
         dataSet.setValueTextSize(12f);
 
@@ -141,7 +162,7 @@ public class AnalyticsActivity extends AppCompatActivity {
             entries.add(new PieEntry(entry.getValue(), entry.getKey()));
         }
 
-        PieDataSet dataSet = new PieDataSet(entries, "Surse");
+        PieDataSet dataSet = new PieDataSet(entries, getString(R.string.chart_label_sources));
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         dataSet.setValueTextSize(12f);
         dataSet.setSliceSpace(3f);
@@ -170,7 +191,7 @@ public class AnalyticsActivity extends AppCompatActivity {
             titles.add(shortTitle);
         }
 
-        BarDataSet dataSet = new BarDataSet(entries, "Citări");
+        BarDataSet dataSet = new BarDataSet(entries, getString(R.string.chart_label_citations));
         dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
         dataSet.setValueTextSize(12f);
 

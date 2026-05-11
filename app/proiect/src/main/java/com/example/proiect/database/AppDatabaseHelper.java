@@ -136,25 +136,33 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
 
     public int verifyLogin(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_USERS, new String[]{COL_ID},
-                COL_USER_EMAIL + "=? AND " + COL_USER_PASSWORD + "=?",
-                new String[]{email, password}, null, null, null);
         int id = -1;
-        if (cursor != null && cursor.moveToFirst()) {
-            id = cursor.getInt(0);
-            cursor.close();
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_USERS, new String[]{COL_ID},
+                    COL_USER_EMAIL + "=? AND " + COL_USER_PASSWORD + "=?",
+                    new String[]{email, password}, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                id = cursor.getInt(0);
+            }
+        } finally {
+            if (cursor != null) cursor.close();
         }
         return id;
     }
 
     public int getUserIdByEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_USERS, new String[]{COL_ID},
-                COL_USER_EMAIL + "=?", new String[]{email}, null, null, null);
         int id = -1;
-        if (cursor != null && cursor.moveToFirst()) {
-            id = cursor.getInt(0);
-            cursor.close();
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_USERS, new String[]{COL_ID},
+                    COL_USER_EMAIL + "=?", new String[]{email}, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                id = cursor.getInt(0);
+            }
+        } finally {
+            if (cursor != null) cursor.close();
         }
         return id;
     }
@@ -175,20 +183,28 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
     public List<ResearchThread> loadThreads() {
         List<ResearchThread> threads = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_THREADS, null);
-        if (cursor.moveToFirst()) {
-            do {
-                ResearchThread thread = new ResearchThread();
-                thread.setThreadId(cursor.getString(cursor.getColumnIndexOrThrow(COL_THREAD_ID)));
-                thread.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(COL_THREAD_TITLE)));
-                thread.setQuery(cursor.getString(cursor.getColumnIndexOrThrow(COL_THREAD_QUERY)));
-                thread.setMode(cursor.getString(cursor.getColumnIndexOrThrow(COL_THREAD_MODE)));
-                thread.setPlanner(cursor.getString(cursor.getColumnIndexOrThrow(COL_THREAD_PLANNER)));
-                thread.setUpdatedAt(cursor.getString(cursor.getColumnIndexOrThrow(COL_THREAD_UPDATED)));
-                threads.add(thread);
-            } while (cursor.moveToNext());
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + TABLE_THREADS, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    ResearchThread thread = new ResearchThread();
+                    thread.setThreadId(cursor.getString(cursor.getColumnIndexOrThrow(COL_THREAD_ID)));
+                    thread.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(COL_THREAD_TITLE)));
+                    thread.setQuery(cursor.getString(cursor.getColumnIndexOrThrow(COL_THREAD_QUERY)));
+                    thread.setMode(cursor.getString(cursor.getColumnIndexOrThrow(COL_THREAD_MODE)));
+                    thread.setPlanner(cursor.getString(cursor.getColumnIndexOrThrow(COL_THREAD_PLANNER)));
+                    thread.setUpdatedAt(cursor.getString(cursor.getColumnIndexOrThrow(COL_THREAD_UPDATED)));
+                    
+                    // Also populate paper count to avoid 0 count issue
+                    thread.setPapers(loadPapersForThread(thread.getThreadId()));
+                    
+                    threads.add(thread);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
         }
-        cursor.close();
         return threads;
     }
 
@@ -216,26 +232,34 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
     public List<PaperItem> loadPapersForThread(String threadId) {
         List<PaperItem> papers = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_PAPERS, null, COL_THREAD_ID + "=?", new String[]{threadId}, null, null, COL_PAPER_YEAR + " DESC");
-        if (cursor.moveToFirst()) {
-            do {
-                papers.add(extractPaper(cursor));
-            } while (cursor.moveToNext());
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_PAPERS, null, COL_THREAD_ID + "=?", new String[]{threadId}, null, null, COL_PAPER_YEAR + " DESC");
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    papers.add(extractPaper(cursor));
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
         }
-        cursor.close();
         return papers;
     }
 
     public List<PaperItem> loadAllPapers() {
         List<PaperItem> papers = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_PAPERS, null);
-        if (cursor.moveToFirst()) {
-            do {
-                papers.add(extractPaper(cursor));
-            } while (cursor.moveToNext());
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + TABLE_PAPERS, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    papers.add(extractPaper(cursor));
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
         }
-        cursor.close();
         return papers;
     }
 
@@ -243,23 +267,31 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         List<PaperItem> papers = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT p.* FROM " + TABLE_PAPERS + " p INNER JOIN " + TABLE_FAVORITES + " f ON p." + COL_ID + " = f." + COL_PAPER_ID + " WHERE f." + COL_USER_ID + " = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
-        if (cursor.moveToFirst()) {
-            do {
-                papers.add(extractPaper(cursor));
-            } while (cursor.moveToNext());
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    papers.add(extractPaper(cursor));
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
         }
-        cursor.close();
         return papers;
     }
 
     public PaperItem loadPaperById(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_PAPERS, null, COL_ID + "=?", new String[]{id}, null, null, null);
+        Cursor cursor = null;
         PaperItem paper = null;
-        if (cursor != null && cursor.moveToFirst()) {
-            paper = extractPaper(cursor);
-            cursor.close();
+        try {
+            cursor = db.query(TABLE_PAPERS, null, COL_ID + "=?", new String[]{id}, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                paper = extractPaper(cursor);
+            }
+        } finally {
+            if (cursor != null) cursor.close();
         }
         return paper;
     }
@@ -300,10 +332,17 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
 
     public boolean isFavorite(int userId, String paperId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_FAVORITES, null, COL_USER_ID + "=? AND " + COL_PAPER_ID + "=?",
-                new String[]{String.valueOf(userId), paperId}, null, null, null);
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
+        Cursor cursor = null;
+        boolean exists = false;
+        try {
+            cursor = db.query(TABLE_FAVORITES, null, COL_USER_ID + "=? AND " + COL_PAPER_ID + "=?",
+                    new String[]{String.valueOf(userId), paperId}, null, null, null);
+            if (cursor != null) {
+                exists = cursor.getCount() > 0;
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+        }
         return exists;
     }
 
@@ -315,25 +354,33 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_PAPER_ID, paperId);
         values.put(COL_RATING_VALUE, rating);
         
-        Cursor cursor = db.query(TABLE_RATINGS, null, COL_USER_ID + "=? AND " + COL_PAPER_ID + "=?",
-                new String[]{String.valueOf(userId), paperId}, null, null, null);
-        if (cursor.getCount() > 0) {
-            db.update(TABLE_RATINGS, values, COL_USER_ID + "=? AND " + COL_PAPER_ID + "=?", new String[]{String.valueOf(userId), paperId});
-        } else {
-            db.insert(TABLE_RATINGS, null, values);
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_RATINGS, null, COL_USER_ID + "=? AND " + COL_PAPER_ID + "=?",
+                    new String[]{String.valueOf(userId), paperId}, null, null, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                db.update(TABLE_RATINGS, values, COL_USER_ID + "=? AND " + COL_PAPER_ID + "=?", new String[]{String.valueOf(userId), paperId});
+            } else {
+                db.insert(TABLE_RATINGS, null, values);
+            }
+        } finally {
+            if (cursor != null) cursor.close();
         }
-        cursor.close();
     }
 
     public float loadRating(int userId, String paperId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_RATINGS, new String[]{COL_RATING_VALUE}, COL_USER_ID + "=? AND " + COL_PAPER_ID + "=?",
-                new String[]{String.valueOf(userId), paperId}, null, null, null);
+        Cursor cursor = null;
         float rating = 0.0f;
-        if (cursor.moveToFirst()) {
-            rating = cursor.getFloat(0);
+        try {
+            cursor = db.query(TABLE_RATINGS, new String[]{COL_RATING_VALUE}, COL_USER_ID + "=? AND " + COL_PAPER_ID + "=?",
+                    new String[]{String.valueOf(userId), paperId}, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                rating = cursor.getFloat(0);
+            }
+        } finally {
+            if (cursor != null) cursor.close();
         }
-        cursor.close();
         return rating;
     }
 
@@ -351,39 +398,53 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
     public Map<String, Integer> getPapersBySource() {
         Map<String, Integer> data = new HashMap<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + COL_PAPER_SOURCE + ", COUNT(*) FROM " + TABLE_PAPERS + " GROUP BY " + COL_PAPER_SOURCE, null);
-        if (cursor.moveToFirst()) {
-            do {
-                data.put(cursor.getString(0), cursor.getInt(1));
-            } while (cursor.moveToNext());
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT " + COL_PAPER_SOURCE + ", COUNT(*) FROM " + TABLE_PAPERS + " GROUP BY " + COL_PAPER_SOURCE, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    String source = cursor.getString(0);
+                    if (source == null || source.isEmpty()) source = "Unknown Source";
+                    data.put(source, cursor.getInt(1));
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
         }
-        cursor.close();
         return data;
     }
 
     public Map<Integer, Integer> getPapersByYear() {
         Map<Integer, Integer> data = new HashMap<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + COL_PAPER_YEAR + ", COUNT(*) FROM " + TABLE_PAPERS + " GROUP BY " + COL_PAPER_YEAR + " ORDER BY " + COL_PAPER_YEAR, null);
-        if (cursor.moveToFirst()) {
-            do {
-                data.put(cursor.getInt(0), cursor.getInt(1));
-            } while (cursor.moveToNext());
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT " + COL_PAPER_YEAR + ", COUNT(*) FROM " + TABLE_PAPERS + " GROUP BY " + COL_PAPER_YEAR + " ORDER BY " + COL_PAPER_YEAR, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    data.put(cursor.getInt(0), cursor.getInt(1));
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
         }
-        cursor.close();
         return data;
     }
 
     public List<PaperItem> getTopPapersByCitations(int limit) {
         List<PaperItem> papers = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_PAPERS, null, null, null, null, null, COL_PAPER_CITATIONS + " DESC", String.valueOf(limit));
-        if (cursor.moveToFirst()) {
-            do {
-                papers.add(extractPaper(cursor));
-            } while (cursor.moveToNext());
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_PAPERS, null, null, null, null, null, COL_PAPER_CITATIONS + " DESC", String.valueOf(limit));
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    papers.add(extractPaper(cursor));
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
         }
-        cursor.close();
         return papers;
     }
 }

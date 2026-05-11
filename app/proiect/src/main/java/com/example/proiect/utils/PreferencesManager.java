@@ -48,7 +48,7 @@ public class PreferencesManager {
         getPrefs(context).edit().putString(KEY_DEFAULT_SORT, sort).apply();
     }
     public static String getDefaultSort(Context context) {
-        return getPrefs(context).getString(KEY_DEFAULT_SORT, "relevance");
+        return getPrefs(context).getString(KEY_DEFAULT_SORT, "year");
     }
 
     // Auto Save Results
