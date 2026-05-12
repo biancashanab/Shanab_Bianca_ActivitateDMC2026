@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">lab11</string>
+    <string name="val_1">Val 1</string>
+    <string name="val_2">Val 2</string>
+    <string name="val_3">Val 3</string>
+    <string name="val_4">Val 4</string>
+    <string name="val_5">Val 5</string>
+    <string-array name="number_of_values">
+        <item>Alege nr. valori</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="chart_types">
+        <item>Column Chart</item>
+        <item>Pie Chart</item>
+    </string-array>
+</resources>
