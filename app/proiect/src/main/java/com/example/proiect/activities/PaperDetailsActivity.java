@@ -19,8 +19,9 @@ import com.example.proiect.utils.PreferencesManager;
 public class PaperDetailsActivity extends AppCompatActivity {
 
     private TextView tvTitle, tvAuthors, tvYear, tvSource, tvCitations, tvAbstract;
+    private TextView tvInstitution, tvCountry, tvOpenAlex;
     private RatingBar rbRating;
-    private Button btnFavorite, btnMap;
+    private Button btnFavorite, btnMap, btnOpenWeb;
     private AppDatabaseHelper dbHelper;
     private PaperItem paper;
     private int currentUserId;
@@ -74,41 +75,51 @@ public class PaperDetailsActivity extends AppCompatActivity {
         tvSource = findViewById(R.id.tvDetSource);
         tvCitations = findViewById(R.id.tvDetCitations);
         tvAbstract = findViewById(R.id.tvDetAbstract);
+        tvInstitution = findViewById(R.id.tvDetInstitution);
+        tvCountry = findViewById(R.id.tvDetCountry);
+        tvOpenAlex = findViewById(R.id.tvDetOpenAlex);
         rbRating = findViewById(R.id.rbPaperRating);
         btnFavorite = findViewById(R.id.btnFavorite);
         btnMap = findViewById(R.id.btnShowOnMap);
+        btnOpenWeb = findViewById(R.id.btnOpenWeb);
         Button btnShare = findViewById(R.id.btnSharePaper);
-        Button btnOpenWeb = findViewById(R.id.btnOpenWeb);
 
         isFavorite = dbHelper.isFavorite(currentUserId, paper.getId());
         updateFavoriteButton();
 
         btnFavorite.setOnClickListener(v -> toggleFavorite());
         
-        btnMap.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MapActivity.class);
-            intent.putExtra("PAPER_ID", paper.getId());
-            startActivity(intent);
-        });
+        // Hide map button if coordinates are missing
+        if (paper.getLat() == null || paper.getLng() == null) {
+            btnMap.setVisibility(android.view.View.GONE);
+        } else {
+            btnMap.setOnClickListener(v -> {
+                Intent intent = new Intent(this, MapActivity.class);
+                intent.putExtra("PAPER_ID", paper.getId());
+                startActivity(intent);
+            });
+        }
 
         btnShare.setOnClickListener(v -> {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
-            String shareContent = getString(R.string.share_prefix) + paper.getTitle() + getString(R.string.share_link_label) + paper.getUrl();
+            String url = resolveBestUrl();
+            String shareContent = getString(R.string.share_prefix) + paper.getTitle() + 
+                    (url != null ? getString(R.string.share_link_label) + url : "");
             sendIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
             sendIntent.setType("text/plain");
             startActivity(Intent.createChooser(sendIntent, getString(R.string.share_chooser_title)));
         });
 
-        btnOpenWeb.setOnClickListener(v -> {
-            String url = paper.getUrl();
-            if (url != null && (url.startsWith("http://") || url.startsWith("https://"))) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url));
+        String finalUrl = resolveBestUrl();
+        if (finalUrl == null) {
+            btnOpenWeb.setVisibility(android.view.View.GONE);
+        } else {
+            btnOpenWeb.setOnClickListener(v -> {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(finalUrl));
                 startActivity(browserIntent);
-            } else {
-                Toast.makeText(this, R.string.err_invalid_url, Toast.LENGTH_SHORT).show();
-            }
-        });
+            });
+        }
 
         rbRating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
             if (fromUser) {
@@ -118,14 +129,64 @@ public class PaperDetailsActivity extends AppCompatActivity {
         });
     }
 
+    private String resolveBestUrl() {
+        String url = paper.getUrl();
+        if (url != null && !url.isEmpty() && (url.startsWith("http://") || url.startsWith("https://"))) {
+            return url;
+        }
+        
+        String doi = paper.getDoi();
+        if (doi != null && !doi.isEmpty()) {
+            if (doi.startsWith("http")) return doi;
+            return "https://doi.org/" + doi;
+        }
+        
+        return null;
+    }
+
     private void displayData() {
         tvTitle.setText(paper.getTitle());
-        tvAuthors.setText(getString(R.string.label_authors) + paper.getAuthors());
-        tvYear.setText(getString(R.string.label_year) + paper.getYear());
-        tvSource.setText(getString(R.string.label_source) + paper.getSource());
-        tvCitations.setText(getString(R.string.label_citations) + paper.getCitationCount());
-        tvAbstract.setText(paper.getAbstractText());
         
+        String authors = paper.getAuthors();
+        tvAuthors.setText(getString(R.string.label_authors) + (authors.isEmpty() ? "N/A" : authors));
+        
+        tvYear.setText(getString(R.string.label_year) + paper.getYear());
+        
+        String source = paper.getSource();
+        tvSource.setText(getString(R.string.label_source) + (source == null || source.isEmpty() ? "N/A" : source));
+        
+        if (paper.getCitationCount() == 0) {
+            tvCitations.setText(R.string.label_citations_na);
+        } else {
+            tvCitations.setText(getString(R.string.label_citations) + paper.getCitationCount());
+        }
+        
+        tvAbstract.setText(paper.getAbstractText() != null ? paper.getAbstractText() : "");
+        
+        // Handle Institution
+        if (paper.getInstitution() != null && !paper.getInstitution().isEmpty()) {
+            tvInstitution.setVisibility(android.view.View.VISIBLE);
+            tvInstitution.setText(getString(R.string.label_institution) + paper.getInstitution());
+        } else {
+            tvInstitution.setVisibility(android.view.View.GONE);
+        }
+
+        // Handle Country
+        if (paper.getCountry() != null && !paper.getCountry().isEmpty()) {
+            tvCountry.setVisibility(android.view.View.VISIBLE);
+            tvCountry.setText(getString(R.string.label_country) + paper.getCountry());
+        } else {
+            tvCountry.setVisibility(android.view.View.GONE);
+        }
+
+        // Handle OpenAlex ID
+        if (paper.getOpenAlexId() != null && !paper.getOpenAlexId().isEmpty()) {
+            tvOpenAlex.setVisibility(android.view.View.VISIBLE);
+            tvOpenAlex.setText(getString(R.string.label_openalex) + paper.getOpenAlexId());
+        } else {
+            tvOpenAlex.setVisibility(android.view.View.GONE);
+        }
+
         float rating = dbHelper.loadRating(currentUserId, paper.getId());
         rbRating.setRating(rating);
     }

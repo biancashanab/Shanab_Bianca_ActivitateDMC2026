@@ -20,8 +20,10 @@ public class PaperItem implements Serializable {
     private int citationCount;
     private String institution;
     private String country;
-    private double lat;
-    private double lng;
+    private Double lat;
+    private Double lng;
+    @SerializedName("openalex_id")
+    private String openAlexId;
 
     public PaperItem() {}
 
@@ -48,7 +50,10 @@ public class PaperItem implements Serializable {
     }
 
     public void setAuthors(String authorsString) {
-        if (authorsString == null || authorsString.isEmpty()) return;
+        if (authorsString == null || authorsString.isEmpty()) {
+            this.authors = null;
+            return;
+        }
         this.authors = java.util.Arrays.asList(authorsString.split(", "));
     }
 
@@ -76,9 +81,22 @@ public class PaperItem implements Serializable {
     public String getCountry() { return country; }
     public void setCountry(String country) { this.country = country; }
 
-    public double getLat() { return lat; }
-    public void setLat(double lat) { this.lat = lat; }
+    public Double getLat() { return lat; }
+    public void setLat(Double lat) { this.lat = lat; }
 
-    public double getLng() { return lng; }
-    public void setLng(double lng) { this.lng = lng; }
+    public Double getLng() { return lng; }
+    public void setLng(Double lng) { this.lng = lng; }
+
+    public String getOpenAlexId() { return openAlexId; }
+    public void setOpenAlexId(String openAlexId) { this.openAlexId = openAlexId; }
+
+    public String getBestAvailableUrl() {
+        if (doi != null && !doi.isEmpty()) {
+            if (doi.startsWith("http")) return doi;
+            return "https://doi.org/" + doi;
+        }
+        if (url != null && !url.isEmpty()) return url;
+        if (openAlexId != null && !openAlexId.isEmpty()) return openAlexId;
+        return null;
+    }
 }

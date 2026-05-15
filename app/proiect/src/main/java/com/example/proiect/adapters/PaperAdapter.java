@@ -54,7 +54,10 @@ public class PaperAdapter extends BaseAdapter {
 
         holder.tvTitle.setText(paper.getTitle());
         holder.tvAuthors.setText(paper.getAuthors());
-        holder.tvSourceYear.setText(paper.getSource() + " | " + paper.getYear());
+        
+        String source = paper.getSource() != null ? paper.getSource() : "Unknown Source";
+        holder.tvSourceYear.setText(source + " | " + paper.getYear());
+
         holder.tvCitations.setText(String.valueOf(paper.getCitationCount()));
 
         return convertView;

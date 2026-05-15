@@ -67,6 +67,10 @@
     <string name="label_year">An: </string>
     <string name="label_source">Sursă: </string>
     <string name="label_citations">Citări: </string>
+    <string name="label_citations_na">Citări: Date indisponibile</string>
+    <string name="label_institution">Instituție: </string>
+    <string name="label_country">Țară: </string>
+    <string name="label_openalex">ID OpenAlex: </string>
 
     <!-- Filter Labels -->
     <string name="filter_all_sources">Toate Sursele</string>

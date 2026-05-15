@@ -65,6 +65,34 @@
                 android:id="@+id/tvDetCitations"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/tvDetInstitution"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/textColorSecondary"
+                android:visibility="gone"
+                android:layout_marginBottom="2dp"/>
+
+            <TextView
+                android:id="@+id/tvDetCountry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/textColorSecondary"
+                android:visibility="gone"
+                android:layout_marginBottom="2dp"/>
+
+            <TextView
+                android:id="@+id/tvDetOpenAlex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/colorAccent"
+                android:textStyle="italic"
+                android:visibility="gone"
                 android:layout_marginBottom="16dp"/>
 
             <TextView

@@ -73,8 +73,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void loadMarkers() {
-        // Load all papers to show institutions on the map
-        // We can load all papers from the DB
         List<PaperItem> allPapers = dbHelper.loadAllPapers();
         
         if (allPapers.isEmpty()) {
@@ -82,25 +80,35 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             return;
         }
 
+        int markerCount = 0;
         for (PaperItem paper : allPapers) {
-            if (paper.getLat() != 0 || paper.getLng() != 0) {
+            if (paper.getLat() != null && paper.getLng() != null) {
                 LatLng pos = new LatLng(paper.getLat(), paper.getLng());
+                String snippet = (paper.getInstitution() != null ? paper.getInstitution() : "") + 
+                                (paper.getCountry() != null ? ", " + paper.getCountry() : "");
+                
                 mMap.addMarker(new MarkerOptions()
                         .position(pos)
                         .title(paper.getTitle())
-                        .snippet(paper.getInstitution() + ", " + paper.getCountry()));
+                        .snippet(snippet.trim().startsWith(",") ? snippet.substring(1).trim() : snippet));
+                markerCount++;
             }
+        }
+        
+        if (markerCount == 0) {
+            Toast.makeText(this, R.string.err_no_locations, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void centerOnPaper(String paperId) {
         PaperItem paper = dbHelper.loadPaperById(paperId);
-        if (paper != null && (paper.getLat() != 0 || paper.getLng() != 0)) {
+        if (paper != null && paper.getLat() != null && paper.getLng() != null) {
             LatLng pos = new LatLng(paper.getLat(), paper.getLng());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12));
             
-            // Optionally show toast with paper info
-            Toast.makeText(this, getString(R.string.label_location_prefix) + paper.getInstitution(), Toast.LENGTH_SHORT).show();
+            if (paper.getInstitution() != null) {
+                Toast.makeText(this, getString(R.string.label_location_prefix) + paper.getInstitution(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ import java.util.Map;
 public class AppDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "academic_engine.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Table Names
     public static final String TABLE_USERS = "users";
@@ -57,6 +57,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_PAPER_COUNTRY = "country";
     public static final String COL_PAPER_LAT = "lat";
     public static final String COL_PAPER_LNG = "lng";
+    public static final String COL_PAPER_OPENALEX = "openalex_id";
 
     // FAVORITES Table - columns
     public static final String COL_FAV_SAVED_AT = "saved_at";
@@ -84,7 +85,8 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
             + COL_PAPER_DOI + " TEXT," + COL_PAPER_URL + " TEXT,"
             + COL_PAPER_ABSTRACT + " TEXT," + COL_PAPER_CITATIONS + " INTEGER,"
             + COL_PAPER_INSTITUTION + " TEXT," + COL_PAPER_COUNTRY + " TEXT,"
-            + COL_PAPER_LAT + " REAL," + COL_PAPER_LNG + " REAL" + ")";
+            + COL_PAPER_LAT + " REAL," + COL_PAPER_LNG + " REAL,"
+            + COL_PAPER_OPENALEX + " TEXT" + ")";
 
     private static final String CREATE_TABLE_FAVORITES = "CREATE TABLE " + TABLE_FAVORITES + "("
             + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_USER_ID + " INTEGER,"
@@ -226,6 +228,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_PAPER_COUNTRY, paper.getCountry());
         values.put(COL_PAPER_LAT, paper.getLat());
         values.put(COL_PAPER_LNG, paper.getLng());
+        values.put(COL_PAPER_OPENALEX, paper.getOpenAlexId());
         db.replace(TABLE_PAPERS, null, values);
     }
 
@@ -310,8 +313,13 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         p.setCitationCount(cursor.getInt(cursor.getColumnIndexOrThrow(COL_PAPER_CITATIONS)));
         p.setInstitution(cursor.getString(cursor.getColumnIndexOrThrow(COL_PAPER_INSTITUTION)));
         p.setCountry(cursor.getString(cursor.getColumnIndexOrThrow(COL_PAPER_COUNTRY)));
-        p.setLat(cursor.getDouble(cursor.getColumnIndexOrThrow(COL_PAPER_LAT)));
-        p.setLng(cursor.getDouble(cursor.getColumnIndexOrThrow(COL_PAPER_LNG)));
+        if (!cursor.isNull(cursor.getColumnIndexOrThrow(COL_PAPER_LAT))) {
+            p.setLat(cursor.getDouble(cursor.getColumnIndexOrThrow(COL_PAPER_LAT)));
+        }
+        if (!cursor.isNull(cursor.getColumnIndexOrThrow(COL_PAPER_LNG))) {
+            p.setLng(cursor.getDouble(cursor.getColumnIndexOrThrow(COL_PAPER_LNG)));
+        }
+        p.setOpenAlexId(cursor.getString(cursor.getColumnIndexOrThrow(COL_PAPER_OPENALEX)));
         return p;
     }
 
