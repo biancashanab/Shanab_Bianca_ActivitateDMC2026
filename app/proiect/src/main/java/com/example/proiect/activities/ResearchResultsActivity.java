@@ -188,7 +188,8 @@ public class ResearchResultsActivity extends AppCompatActivity {
 
         filteredPapers.clear();
         for (PaperItem p : allPapers) {
-            boolean matchesSearch = p.getTitle().toLowerCase().contains(query);
+            boolean matchesSearch = p.getTitle().toLowerCase().contains(query) || 
+                                    p.getAuthors().toLowerCase().contains(query);
             boolean matchesSource = selectedSource.equals(allSourcesLabel) || p.getSource().equals(selectedSource);
             boolean matchesFavorite = !favoritesOnly || dbHelper.isFavorite(currentUserId, p.getId());
             boolean matchesYear = filterYear == -1 || p.getYear() == filterYear;

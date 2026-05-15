@@ -116,8 +116,12 @@ public class PaperDetailsActivity extends AppCompatActivity {
             btnOpenWeb.setVisibility(android.view.View.GONE);
         } else {
             btnOpenWeb.setOnClickListener(v -> {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(finalUrl));
-                startActivity(browserIntent);
+                try {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(finalUrl));
+                    startActivity(browserIntent);
+                } catch (Exception e) {
+                    Toast.makeText(this, R.string.err_invalid_url, Toast.LENGTH_SHORT).show();
+                }
             });
         }
 
