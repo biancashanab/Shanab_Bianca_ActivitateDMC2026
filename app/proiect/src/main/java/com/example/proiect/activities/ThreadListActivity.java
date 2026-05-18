@@ -114,6 +114,9 @@ public class ThreadListActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
             finish();
             return true;
+        } else if (id == R.id.action_add_thread) {
+            showAddThreadDialog();
+            return true;
         } else if (id == R.id.action_refresh) {
             fetchResearchData();
             return true;
@@ -128,6 +131,56 @@ public class ThreadListActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showAddThreadDialog() {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setTitle("Nouă Temă de Cercetare");
+
+        final EditText input = new EditText(this);
+        input.setHint("Introdu subiectul de cercetare (ex: Quantum Computing)");
+        input.setPadding(50, 40, 50, 40);
+        builder.setView(input);
+
+        builder.setPositiveButton("Generează", (dialog, which) -> {
+            String query = input.getText().toString().trim();
+            if (!query.isEmpty()) {
+                createNewThread(query);
+            }
+        });
+        builder.setNegativeButton("Anulează", null);
+        builder.show();
+    }
+
+    private void createNewThread(String query) {
+        String threadId = "custom_" + System.currentTimeMillis();
+        String title = query.length() > 20 ? query.substring(0, 17) + "..." : query;
+        
+        ResearchThread newThread = new ResearchThread();
+        newThread.setThreadId(threadId);
+        newThread.setTitle("Research: " + title);
+        newThread.setQuery(query);
+        newThread.setMode("research");
+        newThread.setPlanner("v2");
+        newThread.setUpdatedAt(new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(new java.util.Date()));
+        
+        dbHelper.insertOrUpdateThread(newThread);
+        
+        // Simulăm generarea unor articole pentru acest nou thread
+        PaperItem dummy = new PaperItem();
+        dummy.setId("p_" + threadId);
+        dummy.setThreadId(threadId);
+        dummy.setTitle("Advances in " + query);
+        dummy.setAuthors("Autonomous Agent");
+        dummy.setYear(2024);
+        dummy.setSource("Academic Engine AI");
+        dummy.setCitationCount(0);
+        dummy.setAbstractText("Acest articol a fost generat automat pe baza interogării: " + query);
+        
+        dbHelper.insertOrUpdatePaper(dummy);
+        
+        Toast.makeText(this, "S-a generat o nouă temă bazată pe: " + query, Toast.LENGTH_LONG).show();
+        loadLocalData();
     }
 
     private void fetchResearchData() {

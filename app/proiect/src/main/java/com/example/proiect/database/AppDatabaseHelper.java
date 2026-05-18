@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.proiect.models.PaperItem;
 import com.example.proiect.models.ResearchThread;
+import com.example.proiect.models.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -169,6 +170,33 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    public User getUserById(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        User user = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_USERS, null, COL_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                user = new User();
+                user.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COL_ID)));
+                user.setName(cursor.getString(cursor.getColumnIndexOrThrow(COL_USER_NAME)));
+                user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(COL_USER_EMAIL)));
+                user.setPassword(cursor.getString(cursor.getColumnIndexOrThrow(COL_USER_PASSWORD)));
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+        return user;
+    }
+
+    public boolean updatePassword(int userId, String newPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_USER_PASSWORD, newPassword);
+        int rows = db.update(TABLE_USERS, values, COL_ID + "=?", new String[]{String.valueOf(userId)});
+        return rows > 0;
+    }
+
     // --- THREAD Methods ---
     public void insertOrUpdateThread(ResearchThread thread) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -268,11 +296,17 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         return papers;
     }
 
+    public List<PaperItem> loadAllPapers() {
+        return loadAllPapers(-1);
+    }
+
     private PaperItem extractPaperWithRating(Cursor cursor) {
         PaperItem p = extractPaper(cursor);
         int ratingIdx = cursor.getColumnIndex("rating");
         if (ratingIdx != -1 && !cursor.isNull(ratingIdx)) {
             p.setUserRating(cursor.getFloat(ratingIdx));
+        } else {
+            p.setUserRating(0f);
         }
         return p;
     }
@@ -468,5 +502,27 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
             if (cursor != null) cursor.close();
         }
         return papers;
+    }
+
+    public int getRatedPapersCount(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_RATINGS + " WHERE " + COL_USER_ID + "=?", new String[]{String.valueOf(userId)});
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+    }
+
+    public float getAverageRating(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT AVG(" + COL_RATING_VALUE + ") FROM " + TABLE_RATINGS + " WHERE " + COL_USER_ID + "=?", new String[]{String.valueOf(userId)});
+        float avg = 0f;
+        if (cursor.moveToFirst()) {
+            avg = cursor.getFloat(0);
+        }
+        cursor.close();
+        return avg;
     }
 }

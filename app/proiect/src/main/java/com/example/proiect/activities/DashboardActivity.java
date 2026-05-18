@@ -70,6 +70,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void prepareItems() {
         dashboardItems = new ArrayList<>();
+        dashboardItems.add(new DashboardAdapter.DashboardItem("Profil", android.R.drawable.ic_menu_myplaces));
         dashboardItems.add(new DashboardAdapter.DashboardItem(getString(R.string.label_research_threads), android.R.drawable.ic_menu_search));
         dashboardItems.add(new DashboardAdapter.DashboardItem(getString(R.string.label_saved_papers), android.R.drawable.ic_menu_save));
         dashboardItems.add(new DashboardAdapter.DashboardItem(getString(R.string.label_map), android.R.drawable.ic_dialog_map));
@@ -79,7 +80,9 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void handleNavigation(String label) {
         Intent intent = null;
-        if (label.equals(getString(R.string.label_research_threads))) {
+        if (label.equals("Profil")) {
+            intent = new Intent(this, ProfileActivity.class);
+        } else if (label.equals(getString(R.string.label_research_threads))) {
             intent = new Intent(this, ThreadListActivity.class);
         } else if (label.equals(getString(R.string.label_saved_papers))) {
             intent = new Intent(this, ResearchResultsActivity.class);

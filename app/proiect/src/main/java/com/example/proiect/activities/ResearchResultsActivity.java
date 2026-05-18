@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -97,6 +98,13 @@ public class ResearchResultsActivity extends AppCompatActivity {
         btnClear.setOnClickListener(v -> clearFilters());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh data to show updated ratings/favorites when coming back from details
+        loadData(getIntent().getBooleanExtra("SHOW_FAVORITES", false));
+    }
+
     private void clearFilters() {
         etSearch.setText("");
         spSource.setSelection(0);
@@ -107,12 +115,74 @@ public class ResearchResultsActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
             finish();
+            return true;
+        } else if (id == R.id.action_add_thread) {
+            // Putem să refolosim logica de generare thread și aici pentru consistență
+            showAddThreadDialog();
+            return true;
+        } else if (id == R.id.action_refresh) {
+            loadData(getIntent().getBooleanExtra("SHOW_FAVORITES", false));
+            return true;
+        } else if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showAddThreadDialog() {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setTitle("Nouă Temă de Cercetare");
+
+        final EditText input = new EditText(this);
+        input.setHint("Introdu subiectul de cercetare");
+        input.setPadding(50, 40, 50, 40);
+        builder.setView(input);
+
+        builder.setPositiveButton("Generează", (dialog, which) -> {
+            String query = input.getText().toString().trim();
+            if (!query.isEmpty()) {
+                createNewThread(query);
+            }
+        });
+        builder.setNegativeButton("Anulează", null);
+        builder.show();
+    }
+
+    private void createNewThread(String query) {
+        String threadId = "custom_" + System.currentTimeMillis();
+        com.example.proiect.models.ResearchThread newThread = new com.example.proiect.models.ResearchThread();
+        newThread.setThreadId(threadId);
+        newThread.setTitle("Research: " + (query.length() > 20 ? query.substring(0, 17) + "..." : query));
+        newThread.setQuery(query);
+        newThread.setMode("research");
+        newThread.setPlanner("v2");
+        newThread.setUpdatedAt(new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(new java.util.Date()));
+        
+        dbHelper.insertOrUpdateThread(newThread);
+        
+        PaperItem dummy = new PaperItem();
+        dummy.setId("p_" + threadId);
+        dummy.setThreadId(threadId);
+        dummy.setTitle("Advances in " + query);
+        dummy.setAuthors("Autonomous Agent");
+        dummy.setYear(2024);
+        dummy.setSource("Academic Engine AI");
+        dummy.setCitationCount(0);
+        dummy.setAbstractText("Articol generat pentru tema: " + query);
+        dbHelper.insertOrUpdatePaper(dummy);
+        
+        Toast.makeText(this, "Temă generată! O poți vedea în lista principală.", Toast.LENGTH_LONG).show();
     }
 
     private void loadData(boolean showFavorites) {
