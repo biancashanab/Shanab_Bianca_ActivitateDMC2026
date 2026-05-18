@@ -199,7 +199,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
                     thread.setUpdatedAt(cursor.getString(cursor.getColumnIndexOrThrow(COL_THREAD_UPDATED)));
                     
                     // Also populate paper count to avoid 0 count issue
-                    thread.setPapers(loadPapersForThread(thread.getThreadId()));
+                    thread.setPapers(loadPapersForThread(thread.getThreadId(), -1));
                     
                     threads.add(thread);
                 } while (cursor.moveToNext());
@@ -232,15 +232,16 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         db.replace(TABLE_PAPERS, null, values);
     }
 
-    public List<PaperItem> loadPapersForThread(String threadId) {
+    public List<PaperItem> loadPapersForThread(String threadId, int userId) {
         List<PaperItem> papers = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
         try {
-            cursor = db.query(TABLE_PAPERS, null, COL_THREAD_ID + "=?", new String[]{threadId}, null, null, COL_PAPER_YEAR + " DESC");
+            String sql = "SELECT p.*, r.rating FROM " + TABLE_PAPERS + " p LEFT JOIN " + TABLE_RATINGS + " r ON p.id = r.paper_id AND r.user_id = ? WHERE p.thread_id = ? ORDER BY p.year DESC";
+            cursor = db.rawQuery(sql, new String[]{String.valueOf(userId), threadId});
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    papers.add(extractPaper(cursor));
+                    papers.add(extractPaperWithRating(cursor));
                 } while (cursor.moveToNext());
             }
         } finally {
@@ -249,33 +250,46 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         return papers;
     }
 
-    public List<PaperItem> loadAllPapers() {
+    public List<PaperItem> loadAllPapers(int userId) {
         List<PaperItem> papers = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery("SELECT * FROM " + TABLE_PAPERS, null);
+            String sql = "SELECT p.*, r.rating FROM " + TABLE_PAPERS + " p LEFT JOIN " + TABLE_RATINGS + " r ON p.id = r.paper_id AND r.user_id = ?";
+            cursor = db.rawQuery(sql, new String[]{String.valueOf(userId)});
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    papers.add(extractPaper(cursor));
+                    papers.add(extractPaperWithRating(cursor));
                 } while (cursor.moveToNext());
             }
         } finally {
             if (cursor != null) cursor.close();
         }
         return papers;
+    }
+
+    private PaperItem extractPaperWithRating(Cursor cursor) {
+        PaperItem p = extractPaper(cursor);
+        int ratingIdx = cursor.getColumnIndex("rating");
+        if (ratingIdx != -1 && !cursor.isNull(ratingIdx)) {
+            p.setUserRating(cursor.getFloat(ratingIdx));
+        }
+        return p;
     }
 
     public List<PaperItem> loadFavoritePapers(int userId) {
         List<PaperItem> papers = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT p.* FROM " + TABLE_PAPERS + " p INNER JOIN " + TABLE_FAVORITES + " f ON p." + COL_ID + " = f." + COL_PAPER_ID + " WHERE f." + COL_USER_ID + " = ?";
+        String query = "SELECT p.*, r.rating FROM " + TABLE_PAPERS + " p " +
+                "INNER JOIN " + TABLE_FAVORITES + " f ON p." + COL_ID + " = f." + COL_PAPER_ID + " " +
+                "LEFT JOIN " + TABLE_RATINGS + " r ON p." + COL_ID + " = r." + COL_PAPER_ID + " AND r." + COL_USER_ID + " = ? " +
+                "WHERE f." + COL_USER_ID + " = ?";
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+            cursor = db.rawQuery(query, new String[]{String.valueOf(userId), String.valueOf(userId)});
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    papers.add(extractPaper(cursor));
+                    papers.add(extractPaperWithRating(cursor));
                 } while (cursor.moveToNext());
             }
         } finally {

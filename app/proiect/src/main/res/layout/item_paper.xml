@@ -9,18 +9,51 @@
     android:layout_marginBottom="8dp"
     android:elevation="1dp">
 
-    <TextView
-        android:id="@+id/tvPaperTitle"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="@color/text_title"
-        android:shadowColor="#40000000"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="1"
-        android:layout_marginBottom="4dp" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvPaperTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/llUserRating"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_title"
+            android:shadowColor="#40000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:id="@+id/llUserRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:background="@drawable/bg_badge_navy"
+            android:visibility="gone">
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@android:drawable/btn_star_big_on"
+                app:tint="@color/navy_primary"
+                android:layout_marginEnd="2dp"
+                android:contentDescription="Rating" />
+            <TextView
+                android:id="@+id/tvUserRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textColor="@color/navy_primary"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tvPaperAuthors"

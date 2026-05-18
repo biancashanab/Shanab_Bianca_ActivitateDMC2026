@@ -83,6 +83,8 @@
     <string name="loading_msg">Se încarcă datele, vă rugăm așteptați...</string>
     <string name="error_loading_msg">A apărut o eroare la descărcarea datelor.</string>
     <string name="btn_retry">Reîncearcă</string>
+    <string name="btn_clear_filters">Resetează</string>
+    <string name="hint_search_threads">Caută teme de cercetare...</string>
     <string name="label_mode_prefix">Mod: </string>
     <string name="label_updated_prefix">Actualizat: </string>
     <string name="label_papers_suffix"> articole</string>

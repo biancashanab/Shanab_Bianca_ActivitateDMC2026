@@ -24,8 +24,12 @@ public class PaperItem implements Serializable {
     private Double lng;
     @SerializedName("openalex_id")
     private String openAlexId;
+    private float userRating;
 
     public PaperItem() {}
+    
+    public float getUserRating() { return userRating; }
+    public void setUserRating(float userRating) { this.userRating = userRating; }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }

@@ -5,16 +5,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    android:background="@drawable/app_background">
+    android:background="@color/navy_primary">
 
     <include layout="@layout/toolbar_main" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@android:color/transparent">
+        android:background="@drawable/app_background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@android:color/transparent">
 
         <EditText
             android:id="@+id/etSearchPaper"
@@ -62,6 +68,17 @@
                 android:textSize="12sp"
                 android:background="@drawable/bg_badge_navy"
                 android:textColor="@color/navy_primary"
+                style="?android:attr/borderlessButtonStyle" />
+
+            <Button
+                android:id="@+id/btnClearFilters"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="@string/btn_clear_filters"
+                android:textSize="12sp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_badge_gold"
+                android:textColor="@color/gold_accent"
                 style="?android:attr/borderlessButtonStyle" />
 
             <CheckBox
@@ -141,4 +158,5 @@
         </LinearLayout>
     </FrameLayout>
 
+</LinearLayout>
 </LinearLayout>

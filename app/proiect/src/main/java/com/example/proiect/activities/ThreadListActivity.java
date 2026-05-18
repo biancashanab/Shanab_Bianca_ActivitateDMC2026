@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import com.google.gson.Gson;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -37,7 +39,11 @@ public class ThreadListActivity extends AppCompatActivity {
     private ListView lvThreads;
     private LinearLayout llLoading, llEmpty;
     private TextView tvEmptyMessage;
+    private EditText etSearch;
     private AppDatabaseHelper dbHelper;
+    private List<ResearchThread> allThreads = new ArrayList<>();
+    private List<ResearchThread> filteredThreads = new ArrayList<>();
+    private ThreadAdapter adapter;
 
     // URL-ul catre fisierul JSON public (exemplu raw github)
     private static final String REMOTE_JSON_URL = "https://raw.githubusercontent.com/username/repo/main/research_results.json";
@@ -58,18 +64,33 @@ public class ThreadListActivity extends AppCompatActivity {
         llLoading = findViewById(R.id.llLoadingThreads);
         llEmpty = findViewById(R.id.llEmptyThreads);
         tvEmptyMessage = findViewById(R.id.tvEmptyMessageThreads);
+        etSearch = findViewById(R.id.etSearchThreads);
         Button btnRetry = findViewById(R.id.btnRetryThreads);
         
         dbHelper = new AppDatabaseHelper(this);
 
         btnRetry.setOnClickListener(v -> fetchResearchData());
 
+        adapter = new ThreadAdapter(this, filteredThreads);
+        lvThreads.setAdapter(adapter);
+
         lvThreads.setOnItemClickListener((parent, view, position, id) -> {
-            ResearchThread thread = (ResearchThread) parent.getItemAtPosition(position);
+            ResearchThread thread = filteredThreads.get(position);
             Intent intent = new Intent(ThreadListActivity.this, ResearchResultsActivity.class);
             intent.putExtra("THREAD_ID", thread.getThreadId());
             intent.putExtra("THREAD_TITLE", thread.getTitle());
             startActivity(intent);
+        });
+
+        etSearch.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                applyFilter(s.toString());
+            }
+            @Override
+            public void afterTextChanged(android.text.Editable s) {}
         });
 
         // Incarca datele locale la inceput
@@ -191,12 +212,30 @@ public class ThreadListActivity extends AppCompatActivity {
         }
     }
 
-    private void loadLocalData() {
-        List<ResearchThread> threads = dbHelper.loadThreads();
-        ThreadAdapter adapter = new ThreadAdapter(this, threads);
-        lvThreads.setAdapter(adapter);
+    private void applyFilter(String query) {
+        String lowerQuery = query.toLowerCase();
+        filteredThreads.clear();
+        for (ResearchThread thread : allThreads) {
+            if (thread.getTitle().toLowerCase().contains(lowerQuery) || 
+                thread.getQuery().toLowerCase().contains(lowerQuery)) {
+                filteredThreads.add(thread);
+            }
+        }
+        adapter.notifyDataSetChanged();
         
-        if (threads.isEmpty()) {
+        if (filteredThreads.isEmpty()) {
+            llEmpty.setVisibility(View.VISIBLE);
+            tvEmptyMessage.setText("Nu am găsit teme pentru \"" + query + "\"");
+        } else {
+            llEmpty.setVisibility(View.GONE);
+        }
+    }
+
+    private void loadLocalData() {
+        allThreads = dbHelper.loadThreads();
+        applyFilter(etSearch.getText().toString());
+        
+        if (allThreads.isEmpty()) {
             llEmpty.setVisibility(View.VISIBLE);
             tvEmptyMessage.setText(R.string.empty_threads_msg);
             lvThreads.setVisibility(View.GONE);

@@ -81,6 +81,7 @@ public class ResearchResultsActivity extends AppCompatActivity {
         llLoading = findViewById(R.id.llLoadingResults);
         llEmpty = findViewById(R.id.llEmptyResults);
         Button btnDate = findViewById(R.id.btnDateFilter);
+        Button btnClear = findViewById(R.id.btnClearFilters);
 
         adapter = new PaperAdapter(this, filteredPapers);
         lvPapers.setAdapter(adapter);
@@ -93,6 +94,16 @@ public class ResearchResultsActivity extends AppCompatActivity {
         });
 
         btnDate.setOnClickListener(v -> showYearPicker());
+        btnClear.setOnClickListener(v -> clearFilters());
+    }
+
+    private void clearFilters() {
+        etSearch.setText("");
+        spSource.setSelection(0);
+        spSort.setSelection(0);
+        cbFavorites.setChecked(false);
+        filterYear = -1;
+        applyFilters();
     }
 
     @Override
@@ -116,12 +127,13 @@ public class ResearchResultsActivity extends AppCompatActivity {
                 allPapers = dbHelper.loadFavoritePapers(currentUserId);
                 cbFavorites.setChecked(true);
             } else if (threadId != null) {
-                allPapers = dbHelper.loadPapersForThread(threadId);
+                allPapers = dbHelper.loadPapersForThread(threadId, currentUserId);
             } else {
-                allPapers = dbHelper.loadAllPapers();
+                allPapers = dbHelper.loadAllPapers(currentUserId);
             }
+            setupFilters(); // Refresh filters based on loaded papers
             applyFilters();
-        }, 500);
+        }, 300);
     }
 
     private void setupFilters() {
@@ -129,7 +141,9 @@ public class ResearchResultsActivity extends AppCompatActivity {
         Set<String> sources = new HashSet<>();
         sources.add(getString(R.string.filter_all_sources));
         for (PaperItem p : allPapers) {
-            sources.add(p.getSource());
+            if (p.getSource() != null) {
+                sources.add(p.getSource());
+            }
         }
         List<String> sourceList = new ArrayList<>(sources);
         Collections.sort(sourceList);
@@ -190,7 +204,10 @@ public class ResearchResultsActivity extends AppCompatActivity {
         for (PaperItem p : allPapers) {
             boolean matchesSearch = p.getTitle().toLowerCase().contains(query) || 
                                     p.getAuthors().toLowerCase().contains(query);
-            boolean matchesSource = selectedSource.equals(allSourcesLabel) || p.getSource().equals(selectedSource);
+            
+            boolean matchesSource = selectedSource.equals(allSourcesLabel) || 
+                                    (p.getSource() != null && p.getSource().equals(selectedSource));
+
             boolean matchesFavorite = !favoritesOnly || dbHelper.isFavorite(currentUserId, p.getId());
             boolean matchesYear = filterYear == -1 || p.getYear() == filterYear;
 

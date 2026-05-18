@@ -45,6 +45,8 @@ public class PaperAdapter extends BaseAdapter {
             holder.tvAuthors = convertView.findViewById(R.id.tvPaperAuthors);
             holder.tvSourceYear = convertView.findViewById(R.id.tvPaperSourceYear);
             holder.tvCitations = convertView.findViewById(R.id.tvPaperCitations);
+            holder.llRating = convertView.findViewById(R.id.llUserRating);
+            holder.tvRating = convertView.findViewById(R.id.tvUserRating);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -60,6 +62,13 @@ public class PaperAdapter extends BaseAdapter {
 
         holder.tvCitations.setText(String.valueOf(paper.getCitationCount()));
 
+        if (paper.getUserRating() > 0) {
+            holder.llRating.setVisibility(View.VISIBLE);
+            holder.tvRating.setText(String.valueOf((int)paper.getUserRating()));
+        } else {
+            holder.llRating.setVisibility(View.GONE);
+        }
+
         return convertView;
     }
 
@@ -68,5 +77,7 @@ public class PaperAdapter extends BaseAdapter {
         TextView tvAuthors;
         TextView tvSourceYear;
         TextView tvCitations;
+        View llRating;
+        TextView tvRating;
     }
 }
