@@ -209,7 +209,6 @@ public class ResearchResultsActivity extends AppCompatActivity {
     private void setupFilters() {
         // Setup Source Spinner
         Set<String> sources = new HashSet<>();
-        sources.add(getString(R.string.filter_all_sources));
         for (PaperItem p : allPapers) {
             if (p.getSource() != null) {
                 sources.add(p.getSource());
@@ -217,9 +216,13 @@ public class ResearchResultsActivity extends AppCompatActivity {
         }
         List<String> sourceList = new ArrayList<>(sources);
         Collections.sort(sourceList);
+        // Adăugăm "Toate Sursele" la începutul listei deja sortate
+        sourceList.add(0, getString(R.string.filter_all_sources));
+        
         ArrayAdapter<String> sourceAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sourceList);
         sourceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spSource.setAdapter(sourceAdapter);
+        spSource.setSelection(0);
 
         // Setup Sort Spinner
         String[] sortOptions = {

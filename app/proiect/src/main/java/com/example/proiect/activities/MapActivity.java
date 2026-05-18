@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.proiect.R;
 import com.example.proiect.database.AppDatabaseHelper;
 import com.example.proiect.models.PaperItem;
+import com.example.proiect.utils.PreferencesManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -73,7 +74,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void loadMarkers() {
-        List<PaperItem> allPapers = dbHelper.loadAllPapers();
+        String email = PreferencesManager.getLoggedUserEmail(this);
+        int userId = dbHelper.getUserIdByEmail(email);
+        List<PaperItem> allPapers = dbHelper.loadAllPapers(userId);
         
         if (allPapers.isEmpty()) {
             Toast.makeText(this, R.string.err_no_locations, Toast.LENGTH_SHORT).show();

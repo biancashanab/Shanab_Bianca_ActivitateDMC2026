@@ -5,13 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    android:background="@color/bg_academic">
+    android:background="@color/navy_primary">
 
     <include layout="@layout/toolbar_main" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/bg_academic">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView"
@@ -34,8 +35,8 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="12dp"/>
 
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/barChartYear"
+                <com.example.proiect.views.CustomChartView
+                    android:id="@+id/customChartYear"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:background="@drawable/bg_card_academic"

@@ -53,10 +53,12 @@ public class ThreadListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thread_list);
 
+        // Forțăm găsirea toolbar-ului prin ID-ul său real din toolbar_main.xml
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setTitle(R.string.label_research_threads);
         }
 
@@ -118,7 +120,8 @@ public class ThreadListActivity extends AppCompatActivity {
             showAddThreadDialog();
             return true;
         } else if (id == R.id.action_refresh) {
-            fetchResearchData();
+            // Forțăm reîncărcarea datelor din JSON-ul local (Assets) pentru a prelua noile citări
+            loadDataFromAssets();
             return true;
         } else if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
@@ -210,12 +213,8 @@ public class ThreadListActivity extends AppCompatActivity {
     }
 
     private void handleFetchFailure(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        if (dbHelper.loadThreads().isEmpty()) {
-            loadDataFromAssets();
-        } else {
-            loadLocalData();
-        }
+        // Dacă fetch-ul online eșuează, încercăm mereu să actualizăm din Assets pentru a reflecta modificările locale în JSON
+        loadDataFromAssets();
     }
 
     private void loadDataFromAssets() {

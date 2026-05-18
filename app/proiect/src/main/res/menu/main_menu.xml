@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_add_thread"
+        android:title="New Research"
+        android:icon="@android:drawable/ic_menu_add"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_refresh"
         android:title="@string/label_refresh"
         android:icon="@android:drawable/stat_notify_sync"

@@ -14,7 +14,7 @@ import androidx.core.widget.NestedScrollView;
 import com.example.proiect.R;
 import com.example.proiect.database.AppDatabaseHelper;
 import com.example.proiect.models.PaperItem;
-import com.github.mikephil.charting.charts.BarChart;
+import com.example.proiect.views.CustomChartView;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class AnalyticsActivity extends AppCompatActivity {
 
-    private BarChart barChartYear;
+    private CustomChartView customChartYear;
     private PieChart pieChartSource;
     private HorizontalBarChart barChartCitations;
     private NestedScrollView scrollView;
@@ -68,7 +68,7 @@ public class AnalyticsActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        barChartYear = findViewById(R.id.barChartYear);
+        customChartYear = findViewById(R.id.customChartYear);
         pieChartSource = findViewById(R.id.pieChartSource);
         barChartCitations = findViewById(R.id.barChartCitations);
         scrollView = findViewById(R.id.scrollView);
@@ -78,11 +78,6 @@ public class AnalyticsActivity extends AppCompatActivity {
     }
 
     private void setupChartAppearance() {
-        // Bar Chart Year
-        barChartYear.getDescription().setEnabled(false);
-        barChartYear.setDrawGridBackground(false);
-        barChartYear.getLegend().setEnabled(false);
-
         // Pie Chart Source
         pieChartSource.getDescription().setEnabled(false);
         pieChartSource.setUsePercentValues(true);
@@ -108,52 +103,10 @@ public class AnalyticsActivity extends AppCompatActivity {
             scrollView.setVisibility(View.VISIBLE);
             tvEmptyState.setVisibility(View.GONE);
             
-            setupBarChartYear(papersByYear);
+            customChartYear.setData(papersByYear);
             setupPieChartSource(papersBySource);
             setupBarChartCitations(topPapers);
         }
-    }
-
-    private void setupBarChartYear(Map<Integer, Integer> data) {
-        List<BarEntry> entries = new ArrayList<>();
-        List<String> years = new ArrayList<>();
-        
-        List<Integer> sortedYears = new ArrayList<>(data.keySet());
-        Collections.sort(sortedYears);
-
-        for (int i = 0; i < sortedYears.size(); i++) {
-            Integer year = sortedYears.get(i);
-            Integer count = data.get(year);
-            if (year != null && count != null) {
-                entries.add(new BarEntry(i, count.floatValue()));
-                years.add(String.valueOf(year));
-            }
-        }
-
-        BarDataSet dataSet = new BarDataSet(entries, getString(R.string.chart_label_papers));
-        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-        dataSet.setValueTextSize(12f);
-
-        BarData barData = new BarData(dataSet);
-        barChartYear.setData(barData);
-
-        XAxis xAxis = barChartYear.getXAxis();
-        xAxis.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                int index = (int) value;
-                if (index >= 0 && index < years.size()) {
-                    return years.get(index);
-                }
-                return "";
-            }
-        });
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularity(1f);
-        xAxis.setDrawGridLines(false);
-
-        barChartYear.animateY(1000);
-        barChartYear.invalidate();
     }
 
     private void setupPieChartSource(Map<String, Integer> data) {
