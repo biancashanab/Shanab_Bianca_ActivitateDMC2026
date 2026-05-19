@@ -1,4 +1,4 @@
-package com.example.proiect.database;
+package com.example.proiect.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -105,6 +105,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    // Baza de date se creeaza aici. Se apeleaza automat daca fisierul .db nu exista.
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_USERS);
@@ -115,6 +116,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_HISTORY);
     }
 
+    // Upgrade-ul la versiunea 2: stergem tabelele vechi si le recream pentru a aplica noua structura (openalex_id).
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
@@ -198,6 +200,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
     }
 
     // --- THREAD Methods ---
+    // Folosim db.replace in loc de insert pentru a preveni duplicatele (foloseste PRIMARY KEY).
     public void insertOrUpdateThread(ResearchThread thread) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -260,6 +263,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         db.replace(TABLE_PAPERS, null, values);
     }
 
+    // LEFT JOIN pentru a aduce rating-ul utilizatorului logat odata cu datele articolului.
     public List<PaperItem> loadPapersForThread(String threadId, int userId) {
         List<PaperItem> papers = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -515,6 +519,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         return count;
     }
 
+    // Calculam rating-ul mediu folosind functia AVG din SQL.
     public float getAverageRating(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT AVG(" + COL_RATING_VALUE + ") FROM " + TABLE_RATINGS + " WHERE " + COL_USER_ID + "=?", new String[]{String.valueOf(userId)});

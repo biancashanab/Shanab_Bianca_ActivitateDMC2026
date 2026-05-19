@@ -10,7 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.proiect.R;
-import com.example.proiect.database.AppDatabaseHelper;
+import com.example.proiect.utils.AppDatabaseHelper;
 import com.example.proiect.utils.PreferencesManager;
 
 public class LoginActivity extends AppCompatActivity {
@@ -78,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
             btnGoToRegister.setEnabled(true);
 
             if (userId != -1) {
+                // Sesiunea este salvata prin PreferencesManager pentru persistenta globala si acces rapid la email-ul utilizatorului
                 PreferencesManager.saveLoggedUserEmail(this, email);
                 Toast.makeText(this, R.string.msg_login_success, Toast.LENGTH_SHORT).show();
                 

@@ -22,7 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.proiect.R;
 import com.example.proiect.adapters.PaperAdapter;
-import com.example.proiect.database.AppDatabaseHelper;
+import com.example.proiect.utils.AppDatabaseHelper;
 import com.example.proiect.models.PaperItem;
 import com.example.proiect.utils.PreferencesManager;
 
@@ -98,10 +98,10 @@ public class ResearchResultsActivity extends AppCompatActivity {
         btnClear.setOnClickListener(v -> clearFilters());
     }
 
+    // Reincarc datele din DB pentru a reflecta modificarile de rating/favorite facute in Detalii
     @Override
     protected void onResume() {
         super.onResume();
-        // Refresh data to show updated ratings/favorites when coming back from details
         loadData(getIntent().getBooleanExtra("SHOW_FAVORITES", false));
     }
 
@@ -114,12 +114,14 @@ public class ResearchResultsActivity extends AppCompatActivity {
         applyFilters();
     }
 
+    // toolbar
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
+    // optiunile din toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -127,7 +129,7 @@ public class ResearchResultsActivity extends AppCompatActivity {
             finish();
             return true;
         } else if (id == R.id.action_add_thread) {
-            // Putem să refolosim logica de generare thread și aici pentru consistență
+            // Refolosesc logica de generare thread și aici pentru consistență
             showAddThreadDialog();
             return true;
         } else if (id == R.id.action_refresh) {
@@ -140,6 +142,7 @@ public class ResearchResultsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // adaug thread nou
     private void showAddThreadDialog() {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("Nouă Temă de Cercetare");
@@ -176,7 +179,7 @@ public class ResearchResultsActivity extends AppCompatActivity {
         dummy.setThreadId(threadId);
         dummy.setTitle("Advances in " + query);
         dummy.setAuthors("Autonomous Agent");
-        dummy.setYear(2024);
+        dummy.setYear(2026);
         dummy.setSource("Academic Engine AI");
         dummy.setCitationCount(0);
         dummy.setAbstractText("Articol generat pentru tema: " + query);
@@ -216,7 +219,7 @@ public class ResearchResultsActivity extends AppCompatActivity {
         }
         List<String> sourceList = new ArrayList<>(sources);
         Collections.sort(sourceList);
-        // Adăugăm "Toate Sursele" la începutul listei deja sortate
+        // pun "Toate Sursele" la începutul listei deja sortate
         sourceList.add(0, getString(R.string.filter_all_sources));
         
         ArrayAdapter<String> sourceAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sourceList);
@@ -234,12 +237,13 @@ public class ResearchResultsActivity extends AppCompatActivity {
         sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spSort.setAdapter(sortAdapter);
 
-        // Listeners
+        // Folosesc TextWatcher pentru cautare "live" (in timp real)
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // In applyFilters verific atat titlul, cat si autorii
                 applyFilters();
             }
             @Override
@@ -318,12 +322,12 @@ public class ResearchResultsActivity extends AppCompatActivity {
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
 
+        // DatePickerDialog configurat ca selector de an.
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year1, month, dayOfMonth) -> {
             filterYear = year1;
             applyFilters();
         }, year, 0, 1);
         
-        // Hide day and month if possible or just use it as year picker
         datePickerDialog.setTitle(R.string.title_select_year);
         datePickerDialog.show();
     }

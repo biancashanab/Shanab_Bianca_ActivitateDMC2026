@@ -11,6 +11,7 @@ import com.example.proiect.models.PaperItem;
 import java.util.List;
 
 public class PaperAdapter extends BaseAdapter {
+    private static final int HIGHLIGHT_CITATION_THRESHOLD = 50;
 
     private Context context;
     private List<PaperItem> papers;
@@ -61,6 +62,11 @@ public class PaperAdapter extends BaseAdapter {
         holder.tvSourceYear.setText(source + " | " + paper.getYear());
 
         holder.tvCitations.setText(String.valueOf(paper.getCitationCount()));
+        if (paper.getCitationCount() > HIGHLIGHT_CITATION_THRESHOLD) {
+            convertView.setBackgroundResource(R.drawable.bg_card_highlighted);
+        } else {
+            convertView.setBackgroundResource(R.drawable.bg_card_academic);
+        }
 
         if (paper.getUserRating() > 0) {
             holder.llRating.setVisibility(View.VISIBLE);

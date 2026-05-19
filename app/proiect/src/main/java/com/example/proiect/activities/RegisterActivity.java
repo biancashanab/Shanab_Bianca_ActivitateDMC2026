@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.proiect.R;
-import com.example.proiect.database.AppDatabaseHelper;
+import com.example.proiect.utils.AppDatabaseHelper;
 
 public class RegisterActivity extends AppCompatActivity {
 

@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.proiect.R;
-import com.example.proiect.database.AppDatabaseHelper;
+import com.example.proiect.utils.AppDatabaseHelper;
 import com.example.proiect.models.PaperItem;
 import com.example.proiect.utils.PreferencesManager;
 
@@ -104,10 +104,12 @@ public class PaperDetailsActivity extends AppCompatActivity {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             String url = resolveBestUrl();
+            // Construim continutul pentru partajare, incluzand titlul si cel mai bun link
             String shareContent = getString(R.string.share_prefix) + paper.getTitle() + 
                     (url != null ? getString(R.string.share_link_label) + url : "");
             sendIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
             sendIntent.setType("text/plain");
+            // createChooser (fereastra care te lasă să alegi aplicatia)
             startActivity(Intent.createChooser(sendIntent, getString(R.string.share_chooser_title)));
         });
 
@@ -117,6 +119,7 @@ public class PaperDetailsActivity extends AppCompatActivity {
         } else {
             btnOpenWeb.setOnClickListener(v -> {
                 try {
+                    // Deschidem link-ul valid (DOI sau URL) intr-un browser extern.
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(finalUrl));
                     startActivity(browserIntent);
                 } catch (Exception e) {
@@ -133,6 +136,7 @@ public class PaperDetailsActivity extends AppCompatActivity {
         });
     }
 
+    // Metoda de fallback: prioritizam DOI (ca link), apoi URL, apoi null.
     private String resolveBestUrl() {
         String url = paper.getUrl();
         if (url != null && !url.isEmpty() && (url.startsWith("http://") || url.startsWith("https://"))) {

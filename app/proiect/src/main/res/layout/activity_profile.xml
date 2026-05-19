@@ -153,7 +153,7 @@
                 android:text="Modificare Parolă"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/navy_primary"
+                android:textColor="@color/white"
                 android:layout_marginBottom="16dp"/>
 
             <EditText

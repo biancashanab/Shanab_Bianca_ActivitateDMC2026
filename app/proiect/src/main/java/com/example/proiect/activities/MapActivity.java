@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.proiect.R;
-import com.example.proiect.database.AppDatabaseHelper;
+import com.example.proiect.utils.AppDatabaseHelper;
 import com.example.proiect.models.PaperItem;
 import com.example.proiect.utils.PreferencesManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,7 +41,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         dbHelper = new AppDatabaseHelper(this);
         targetPaperId = getIntent().getStringExtra("PAPER_ID");
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -62,14 +62,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
+        // Incarc markerele pentru toate articolele care au coordonate
         loadMarkers();
 
         if (targetPaperId != null) {
+            // Zoom pe articolul ales anterior din ecranul de detalii
             centerOnPaper(targetPaperId);
         } else {
-            // Default center (e.g., Bucharest) if no specific paper is selected
+            // Default center pe Bucuresti daca harta e deschisa fara un articol anume
             LatLng defaultLoc = new LatLng(44.4268, 26.1025);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLoc, 5));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLoc, 10));
         }
     }
 
@@ -85,11 +87,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         int markerCount = 0;
         for (PaperItem paper : allPapers) {
-            if (paper.getLat() != null && paper.getLng() != null) {
+            // Evitam "Null Island" (0,0) verificand validitatea coordonatelor
+            if (paper.getLat() != null && paper.getLng() != null && (Math.abs(paper.getLat()) > 0.001)) {
                 LatLng pos = new LatLng(paper.getLat(), paper.getLng());
                 String snippet = (paper.getInstitution() != null ? paper.getInstitution() : "") + 
                                 (paper.getCountry() != null ? ", " + paper.getCountry() : "");
                 
+                // Titlul markerului este titlul articolului, snippet-ul contine locatia
                 mMap.addMarker(new MarkerOptions()
                         .position(pos)
                         .title(paper.getTitle())

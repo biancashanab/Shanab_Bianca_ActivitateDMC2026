@@ -49,6 +49,7 @@ public class DashboardActivity extends AppCompatActivity {
         return true;
     }
 
+    // variantele din toolbar
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
         int id = item.getItemId();
@@ -68,6 +69,7 @@ public class DashboardActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Folosim o lista de obiecte DashboardItem pentru a popula GridView-ul principal al aplicatiei.
     private void prepareItems() {
         dashboardItems = new ArrayList<>();
         dashboardItems.add(new DashboardAdapter.DashboardItem("Profil", android.R.drawable.ic_menu_myplaces));
@@ -78,6 +80,7 @@ public class DashboardActivity extends AppCompatActivity {
         dashboardItems.add(new DashboardAdapter.DashboardItem(getString(R.string.label_settings), android.R.drawable.ic_menu_preferences));
     }
 
+    // Navigarea centralizata folosind Intent-uri pentru a lansa activitatile corespunzatoare fiecarui modul
     private void handleNavigation(String label) {
         Intent intent = null;
         if (label.equals("Profil")) {
@@ -103,6 +106,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    // Dialog de confirmare inainte de logout pentru a preveni inchiderea accidentala a sesiunii
     private void showLogoutConfirmation() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.label_logout)
@@ -121,7 +125,7 @@ public class DashboardActivity extends AppCompatActivity {
     private void showAboutDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.label_about)
-                .setMessage("Academic Engine Mobile Lite\nVersiune 1.0\n\nProiect realizat pentru disciplina Sisteme Mobile.\n© 2024")
+                .setMessage("Academic Engine Mobile\nVersiune 1.0\n\n© 2026")
                 .setPositiveButton("OK", null)
                 .show();
     }

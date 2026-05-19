@@ -16,7 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.proiect.R;
 import com.example.proiect.adapters.ThreadAdapter;
-import com.example.proiect.database.AppDatabaseHelper;
+import com.example.proiect.utils.AppDatabaseHelper;
 import com.example.proiect.models.PaperItem;
 import com.example.proiect.models.ResearchThread;
 import com.example.proiect.network.ApiClient;
@@ -155,6 +155,7 @@ public class ThreadListActivity extends AppCompatActivity {
         builder.show();
     }
 
+    // Permitem utilizatorului sa creeze propriile teme de cercetare prin generare dinamica de obiecte in SQLite.
     private void createNewThread(String query) {
         String threadId = "custom_" + System.currentTimeMillis();
         String title = query.length() > 20 ? query.substring(0, 17) + "..." : query;
@@ -169,13 +170,13 @@ public class ThreadListActivity extends AppCompatActivity {
         
         dbHelper.insertOrUpdateThread(newThread);
         
-        // Simulăm generarea unor articole pentru acest nou thread
+        // Simulăm generarea unor articole pentru acest nou thread prin crearea unui PaperItem de tip "dummy".
         PaperItem dummy = new PaperItem();
         dummy.setId("p_" + threadId);
         dummy.setThreadId(threadId);
         dummy.setTitle("Advances in " + query);
         dummy.setAuthors("Autonomous Agent");
-        dummy.setYear(2024);
+        dummy.setYear(2026);
         dummy.setSource("Academic Engine AI");
         dummy.setCitationCount(0);
         dummy.setAbstractText("Acest articol a fost generat automat pe baza interogării: " + query);
@@ -186,6 +187,7 @@ public class ThreadListActivity extends AppCompatActivity {
         loadLocalData();
     }
 
+    // Executam cererea de date pe un thread asincron (background) folosind Retrofit pentru a nu bloca interfata utilizatorului.
     private void fetchResearchData() {
         llLoading.setVisibility(View.VISIBLE);
         llEmpty.setVisibility(View.GONE);
@@ -196,6 +198,7 @@ public class ThreadListActivity extends AppCompatActivity {
             public void onResponse(Call<ResearchExportResponse> call, Response<ResearchExportResponse> response) {
                 llLoading.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
+                    // Salvam datele primite in SQLite pentru acces offline ulterior.
                     saveDataToSQLite(response.body().getThreads());
                     Toast.makeText(ThreadListActivity.this, "Date actualizate din sursa ONLINE", Toast.LENGTH_SHORT).show();
                     loadLocalData();
@@ -217,6 +220,7 @@ public class ThreadListActivity extends AppCompatActivity {
         loadDataFromAssets();
     }
 
+    // Incarcam datele din folderul Assets folosind GSON pentru a deserializa fluxul de date (InputStream) in obiecte Java
     private void loadDataFromAssets() {
         try {
             InputStream is = getAssets().open("research_results.json");
@@ -237,12 +241,12 @@ public class ThreadListActivity extends AppCompatActivity {
 
     private void loadDemoData() {
         // Fallback extrem daca nici assets nu merge
-        ResearchThread t1 = new ResearchThread("t1", "Machine Learning Trends", "machine learning 2024", "research", "auto", "2024-05-20", null);
+        ResearchThread t1 = new ResearchThread("t1", "Machine Learning Trends", "machine learning 2026", "research", "auto", "2026-05-20", null);
         dbHelper.insertOrUpdateThread(t1);
 
         PaperItem p1 = new PaperItem();
-        p1.setId("p1"); p1.setThreadId("t1"); p1.setTitle("Deep Learning in 2024 (Demo)");
-        p1.setAuthors("A. Ionescu"); p1.setYear(2024); p1.setSource("arXiv");
+        p1.setId("p1"); p1.setThreadId("t1"); p1.setTitle("Deep Learning in 2026 (Demo)");
+        p1.setAuthors("A. Ionescu"); p1.setYear(2026); p1.setSource("arXiv");
         p1.setCitationCount(50); p1.setAbstractText("A comprehensive study on LLMs.");
         dbHelper.insertOrUpdatePaper(p1);
 

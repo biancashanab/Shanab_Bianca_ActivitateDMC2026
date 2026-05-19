@@ -1,4 +1,4 @@
-package com.example.proiect.views;
+package com.example.proiect.utils;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -38,6 +38,7 @@ public class CustomChartView extends View {
         invalidate();
     }
 
+    // Clasa extinde View pentru a desena manual graficul folosind Canvas si Paint.
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
@@ -55,6 +56,7 @@ public class CustomChartView extends View {
 
         for (int i = 0; i < n; i++) {
             int value = values.get(i);
+            // Calculam inaltimea barei raportand valoarea curenta la maximul din set.
             float barHeight = max == 0 ? 0 : (float) value / max * (height - 150);
 
             paint.setColor(colors[i % colors.length]);
@@ -64,6 +66,7 @@ public class CustomChartView extends View {
                             height - 60f, paint);
 
             // Labels and Values
+            // Setam alinierea centrata pentru a pozitiona textul deasupra/sub bare.
             paint.setColor(Color.BLACK);
             paint.setTextSize(35);
             paint.setTextAlign(Paint.Align.CENTER);

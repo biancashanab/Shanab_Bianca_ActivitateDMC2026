@@ -3,6 +3,10 @@ package com.example.proiect.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+/**
+ * Clasa utilitara pentru gestionarea persistentei setarilor si a sesiunii de utilizator folosind SharedPreferences.
+ * Asigura pastrarea email-ului utilizatorului logat chiar si dupa repornirea aplicatiei.
+ */
 public class PreferencesManager {
     private static final String PREF_NAME = "AcademicEnginePrefs";
 
@@ -19,7 +23,7 @@ public class PreferencesManager {
         return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
-    // Email Utilizator
+    // Salvam email-ul pentru a "tine minte" sesiunea activa, evitand re-autentificarea la fiecare pornire.
     public static void saveLoggedUserEmail(Context context, String email) {
         getPrefs(context).edit().putString(KEY_USER_EMAIL, email).apply();
     }
